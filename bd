@@ -1,0 +1,62 @@
+-- =========================================================
+-- CREACIÓN DE BASE DE DATOS
+-- =========================================================
+CREATE DATABASE IF NOT EXISTS juegodb
+    DEFAULT CHARACTER SET utf8mb4
+    COLLATE utf8mb4_general_ci;
+
+USE juegodb;
+
+-- =========================================================
+-- 1) TABLA USUARIOS
+-- =========================================================
+CREATE TABLE Usuarios (
+    id_usuario INT AUTO_INCREMENT PRIMARY KEY,
+    nickname VARCHAR(50) NOT NULL UNIQUE,
+    fechaNacimiento DATE NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+);
+
+-- =========================================================
+-- 2) TABLA CONTRASEÑAS
+--    Guarda el hash de password_hash() asociado al nickname
+-- =========================================================
+CREATE TABLE contraseñas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nickname VARCHAR(50) NOT NULL,
+    contraseñas VARCHAR(255) NOT NULL,
+
+    FOREIGN KEY (nickname) REFERENCES Usuarios(nickname)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+-- =========================================================
+-- 3) TABLA PARTIDA
+--    Opción IDEAL: separar ganador_jugador y gano_computadora
+-- =========================================================
+CREATE TABLE Partida (
+    id_partida INT AUTO_INCREMENT PRIMARY KEY,
+
+    -- jugador que juega la partida
+    id_jugador INT NOT NULL,
+
+    -- duración almacenada como TIME (hh:mm:ss)
+    duracion_partida TIME NOT NULL,
+
+    -- ganador: o un jugador (FK) o la computadora
+    ganador_jugador INT NULL,
+    gano_computadora BOOLEAN NOT NULL DEFAULT 0,
+
+    fecha_partida DATETIME NOT NULL,
+
+    -- FK al jugador que jugó la partida
+    FOREIGN KEY (id_jugador) REFERENCES Usuarios(id_usuario)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+
+    -- FK al jugador que ganó
+    FOREIGN KEY (ganador_jugador) REFERENCES Usuarios(id_usuario)
+        ON UPDATE CASCADE
+        ON DELETE SET NULL
+);

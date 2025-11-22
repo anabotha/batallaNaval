@@ -1,0 +1,61 @@
+body {
+background: #152e4a;
+background: radial-gradient(circle, rgba(21, 46, 74, 1) 0%, rgba(13, 27, 42, 1) 35%, rgba(15, 51, 87, 1) 100%);
+color: white;
+font-family: Arial, sans-serif;
+display: flex;
+align-items: center;
+justify-content: center;
+height: 100vh;
+margin: 0;
+flex-direction: column;
+}
+h1 {
+  margin: 20px 0 10px;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 50px;
+      font-weight: bold;
+      background: linear-gradient(360deg, #42d392, #647eff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+}
+
+.header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      margin-bottom:20px;
+      width: 100%;
+    }
+
+    .header > div {
+      flex: 1;
+      text-align: center;
+    }
+
+.ultima-partida{
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+    }
+
+    button {
+width: 100%;
+padding: 10px;
+background-color: #1e90ff;
+border: none;
+border-radius: 5px;
+font-weight: bold;
+color: white;
+cursor: pointer;
+font-size: 16px;
+}
+section{
+     display: flex;
+     flex-direction: row;
+     align-items: center;
+     }

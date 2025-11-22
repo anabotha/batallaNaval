@@ -1,0 +1,86 @@
+body {
+background-color: #0d1b2a;
+color: white;
+font-family: Arial, sans-serif;
+display: flex;
+align-items: center;
+justify-content: center;
+height: 100vh;
+margin: 0;
+flex-direction: column;
+}
+button {
+width: 100%;
+padding: 10px;
+background-color: #1e90ff;
+border: none;
+border-radius: 5px;
+font-weight: bold;
+color: white;
+cursor: pointer;
+font-size: 16px;
+}
+.register-box {
+     display: flex;
+     flex-direction: column;
+     background-color: #1b263b;
+     border-radius: 10px;
+     padding: 40px;
+     width: 320px;
+     text-align: center;
+     box-shadow: 0 0 20px #415a77;
+     margin-top: 10vh
+}
+form{
+     display: flex;
+flex-direction: column;
+text-align: start;
+}
+
+label{
+     font-size: small;
+
+}
+.register-box h2 {
+     margin-bottom: 10px;
+}
+.register-box p {
+     margin-top: 0;
+     color: #a9bcd0;
+}
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="date"] {
+     width: 100%;
+     padding: 10px;
+     margin: 12px 0;
+     border: none;
+     border-radius: 5px;
+     font-size: 14px;
+}
+
+a {
+display: block;
+margin-top: 15px;
+font-size: 13px;
+color: #a9bcd0;
+text-decoration: none;
+}
+a:hover {
+text-decoration: underline;
+}
+
+.info{
+     font-weight: bolder;
+     font-size: 18px;
+     color:red;
+}
+.exito{
+     font-weight: bolder;
+     font-size: 18px;
+     color:greenyellow;
+}
+
+
+
