@@ -6,28 +6,68 @@ body{
      flex-direction: column;
 }
 
-.tablero {
+.tablero_chico {
     display: grid;
     grid-template-columns: repeat(10, 30px);
     grid-template-rows: repeat(10, 30px);
     gap: 0;
     margin-top: 20px;
 }
-
+.tablero_mediano {
+    display: grid;
+    grid-template-columns: repeat(15, 30px);
+    grid-template-rows: repeat(10, 30px);
+    gap: 0;
+    margin-top: 20px;
+}
+.tablero_grande {
+    display: grid;
+    grid-template-columns: repeat(10, 30px);
+    grid-template-rows: repeat(20, 30px);
+    gap: 0;
+    margin-top: 20px;
+}
+.tablero_enorme {
+    display: grid;
+    grid-template-columns: repeat(15, 30px);
+    grid-template-rows: repeat(15, 30px);
+    gap: 0;
+    margin-top: 20px;
+}
 .cell {
     width: 30px;
     height: 30px;
     border: 1px solid black;
 }
 
-.tablero_enemigo {
+.tablero_enemigo_chico {
     display: grid;
     grid-template-columns: repeat(10, 20px);
     grid-template-rows: repeat(10, 20px);
     gap: 0;
     margin-top: 20px;
 }
-
+.tablero_enemigo_mediano {
+    display: grid;
+    grid-template-columns: repeat(15, 20px);
+    grid-template-rows: repeat(10, 20px);
+    gap: 0;
+    margin-top: 20px;
+}
+.tablero_enemigo_grande {
+    display: grid;
+    grid-template-columns: repeat(10, 20px);
+    grid-template-rows: repeat(20, 20px);
+    gap: 0;
+    margin-top: 20px;
+}
+.tablero_enemigo_enorme {
+    display: grid;
+    grid-template-columns: repeat(15, 20px);
+    grid-template-rows: repeat(15, 20px);
+    gap: 0;
+    margin-top: 20px;
+}
 .cell_enemigo {
     width: 20px;
     height: 20px;

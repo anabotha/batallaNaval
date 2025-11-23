@@ -31,18 +31,22 @@ switch ($tablero) {
      case '100':
           $row=10;
           $col=10;
+          $tab="chico";
      break;
      case '150':
           $row=10;
           $col=15;
+          $tab="mediano";
      break;
      case '200':
           $row=20;
           $col=10;
+          $tab="grande";
      break; 
      case '225':
           $row=15;
           $col=15;
+          $tab="enorme";
      break;
      default:
           # code...
@@ -60,15 +64,28 @@ switch ($tablero) {
 
 </head>
 <body>
+      <div class="instrucciones">
+          <h2>Instrucciones para atacar las embarcaciones:</h2>
+          <ul>
+               <li>Haga clic en una celda del tablero enemigo para atacar una embarcación.</li>
+               <li>Repita el proceso hasta que todas las embarcaciones estén sumergidas.</li>
+          </ul>
+          <div id="indicaciones">
+
+               </div>  
+          </div>  
      <div class="contenedor_tableros">   
-          <div class="tablero">
+                    <div class="tablero_<?php echo $tab; ?>" id="tablero">
+                    <!-- <h2>Tu tablero</h2> -->
                <?php for ($i = 0; $i < $row; $i++): ?>
                     <?php for ($j = 0; $j < $col; $j++): ?>
                          <div class="cell" id="<?php echo 'cell-' . $i . '-' . $j; ?>"></div>
                     <?php endfor; ?>
                <?php endfor; ?>
           </div>
-          <div class="tablero_enemigo">
+          <div class="tablero_enemigo_<?php echo $tab; ?>" id="tablero"">
+          <!-- <h2>Tablero Enemigo</h2> -->
+          <br>
                <?php for ($i = 0; $i < $row; $i++): ?>
                     <?php for ($j = 0; $j < $col; $j++): ?>
                          <div class="cell_enemigo"></div>

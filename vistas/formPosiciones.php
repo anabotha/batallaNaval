@@ -53,18 +53,22 @@ switch ($tablero) {
      case '100':
           $row=10;
           $col=10;
+          $tab="chico";
      break;
      case '150':
           $row=10;
           $col=15;
+          $tab="mediano";
      break;
      case '200':
           $row=20;
           $col=10;
+          $tab="grande";
      break; 
      case '225':
           $row=15;
           $col=15;
+          $tab="enorme";
      break;
      default:
           # code...
@@ -104,7 +108,7 @@ $jsonTablero = json_encode(["row" => $row, "col" => $col]);
      <div class="contenedor_tableros"> 
 
 
-          <div class="tablero">
+          <div class="tablero_<?php echo $tab; ?>" id="tablero">
                <?php for ($i = 0; $i < $row; $i++): ?>
                     <?php for ($j = 0; $j < $col; $j++): ?>
                          <!-- <div class="cell" id="<?php echo 'cell-' . $i . '-' . $j; ?>"></div> -->
@@ -113,7 +117,7 @@ $jsonTablero = json_encode(["row" => $row, "col" => $col]);
                          <?php endfor; ?>
                <?php endfor; ?>
           </div>
-         <button id="confirmarPosiciones" href="siguientepestaña">Confirmar Posiciones</button>
+         <button id="confirmarPosiciones" onClick="confirmarPosiciones()">Confirmar Posiciones</button>
      </div>
 </body>
 </html>

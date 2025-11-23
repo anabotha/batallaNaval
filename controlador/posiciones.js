@@ -3,7 +3,7 @@ console.log("Flota cargada:", flota);
 let ocupadas = new Set();
 let listaBarcos = [];
 let barcoActualIndex = 0;
-
+let fin=false;
 const prepararListaBarcos = () => {
     listaBarcos = [];
 
@@ -149,6 +149,7 @@ const siguienteBarco = () => {
 
 const finalizarColocacion = () => {
     const indicador = document.getElementById("indicaciones");
+    fin=true;
 
     indicador.innerHTML = `
         <h2>¡Todos los barcos fueron colocados!</h2>
@@ -158,6 +159,20 @@ const finalizarColocacion = () => {
     console.log("Flota final con sus posiciones:", listaBarcos);
 };
 
+const sacarListeners=()=>{
+    const cells = document.querySelectorAll(".cell");
+
+    
+    cells.forEach(cell => {
+        cell.removeEventListener("click");
+    });
+}
+const confirmarPosiciones=()=>{
+    if( fin ) {
+        window.location.href = "../vistas/juego.php";
+        exit;
+    } 
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     const cells = document.querySelectorAll(".cell");
@@ -169,3 +184,4 @@ document.addEventListener("DOMContentLoaded", () => {
         cell.addEventListener("click", posicionElegida);
     });
 });
+
