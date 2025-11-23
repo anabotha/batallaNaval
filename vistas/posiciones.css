@@ -39,3 +39,8 @@ body{
     flex-direction: row;
     gap: 90px; /* Espacio entre los dos tableros */
 }
+.ocupada {
+    outline: 2px solid black;
+    opacity: 0.8;
+    
+}
