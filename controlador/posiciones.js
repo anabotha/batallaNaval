@@ -1,6 +1,8 @@
 console.log("Flota cargada:", flota);
 // VARIABLES GLOBALES
-let ocupadas = new Set();
+// let ocupadas = new Set();
+let ocupadas = [];
+
 let listaBarcos = [];
 let barcoActualIndex = 0;
 let fin=false;
@@ -14,7 +16,8 @@ const prepararListaBarcos = () => {
                 index: i,
                 color: flota[tipo].color,
                 posiciones: [],
-                tamaño:flota[tipo].tamaño
+                tamaño:flota[tipo].tamaño,
+                orientacion:flota[tipo].orientacion
             });
         }
     }
@@ -34,8 +37,8 @@ const mostrarBarcoActual = () => {
 
 const posicionElegida = (e) => {
      const barco = listaBarcos[barcoActualIndex];
-     const fila = e.target.dataset.row;
-     const col  = e.target.dataset.col;
+     const fila =  parseInt(e.target.dataset.row);
+     const col  =  parseInt(e.target.dataset.col);
      // guardar posición del barco
      barco.posiciones.push({ fila, col });
 
@@ -73,67 +76,76 @@ const ocuparCeldas = (barco,fila,col) => {
     for (let i = 0; i < tamaño; i++) {
         let f = parseInt(fila);
         let c = parseInt(col);
-        if (orientacion === "horizontal") {
+        if (orientacion == "horizontal") {
             c = parseInt(col) + i;
         } else {
             f = parseInt(fila) + i;
           }
-          ocupadas.add(`${f}-${c}`);
+          
+ocupadas.push({
+    fila: f,
+    col: c,
+    barco: barco.tipo,     
+    color: barco.color,
+    orientacion:barco.orientacion
+
+});
+
+        //   ocupadas.add(`${f}-${c}`); esto es del set
+
      
      const celda = document.querySelector(`[data-row="${f}"][data-col="${c}"]`);
 if (!celda) {
     console.error(`ERROR: No existe la celda (${f},${c})`);
     return;
 }
-
-celda.style.backgroundColor = barco.color;
+console.log(celda);
 celda.classList.add("ocupada");
+celda.style.background = `${barco.color}`;
+// celda.removeEventListener("onClick");
     }
 };
 
-const verificarPosicion=(barco,fila,col)=>{
-     console.log("tamaño",barco.tamaño)
-     const maxFilas = tablero.row;
-     const maxCols = tablero.col;
-     
-    if (barco.orientacion === "horizontal") {
+const verificarPosicion = (barco, fila, col) => {
+    const maxFilas = tablero.row;
+    const maxCols  = tablero.col;
 
-        if (col + tamaño > maxCols) {
+    if (barco.orientacion == "horizontal") {
+        if (col + barco.tamaño > maxCols) {
             return false;
         }
-
-    } else if (barco.orientacion === "vertical") {
-
-        if (fila + tamaño > maxFilas) {
+    } else if (barco.orientacion == "vertical") {
+        if (fila + barco.tamaño > maxFilas) {
             return false;
-        }
-    } else{
-     return true;
-    }
-     
-}
-
-const verificarChoque=(barco,fila,col)=>{
-    for (let i = 0; i < barco.tamaño; i++) {
-
-        let f = parseInt(fila);
-        let c = parseInt(col);
-
-        if (barco.orientacion === "horizontal") {
-            c = parseInt(col) + i;
-        } else {
-            f = parseInt(fila) + i;
-        }
-
-        // verificación lógica de choque
-        if (ocupadas.has(`${f}-${c}`)) {
-            return false; 
         }
     }
 
     return true;
+};
 
-}
+
+const verificarChoque = (barco, fila, col) => {
+    for (let i = 0; i < barco.tamaño; i++) {
+
+        let f =  parseInt(fila);
+        let c =  parseInt(col);
+        console.log(barco);
+        if (barco.orientacion == "horizontal") {
+            console.log("horizontal")
+            c = col + i;
+        } else {
+            f = fila + i;
+            console.log("vertical")
+        }
+
+        // Usá otro nombre dentro del some
+        if (ocupadas.some(cell => cell.fila === f && cell.col === c)) {
+            return false;
+        }
+    }
+
+    return true;
+};
 
 const siguienteBarco = () => {
     barcoActualIndex++;
@@ -156,7 +168,10 @@ const finalizarColocacion = () => {
         <p>Puedes continuar al siguiente paso.</p>
     `;
 
-    console.log("Flota final con sus posiciones:", listaBarcos);
+    console.log("Flota final con sus posiciones:", ocupadas);
+    sessionStorage.removeItem("ocupadas");
+    sessionStorage.setItem("ocupadas", JSON.stringify(ocupadas));
+
 };
 
 const sacarListeners=()=>{

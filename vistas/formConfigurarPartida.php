@@ -38,10 +38,10 @@ session_start();
 </div>
 <div class="div-form">
  <label for="color">Color del acorazado</label>
-      <input type="radio" name="color_acorazados" id="amarillo" value="amarillo"> amarillo </input>
- <input type="radio" name="color_acorazados" id="rojo" value="rojo"> rojo </input>
- <input type="radio" name="color_acorazados" id="verde" value="verde"> verde </input>
- <input type="radio" name="color_acorazados" id="azul" value="azul"> azul </input>
+      <input type="radio" name="color_acorazados" id="amarillo" value="yellow"> amarillo </input>
+ <input type="radio" name="color_acorazados" id="rojo" value="red"> rojo </input>
+ <input type="radio" name="color_acorazados" id="verde" value="green"> verde </input>
+ <input type="radio" name="color_acorazados" id="azul" value="blue"> azul </input>
 </div>
 
 </section>
@@ -63,10 +63,10 @@ session_start();
      <div class="div-form">
 
  <label for="color">Color de los destructores </label>
-      <input type="radio" name="color_destructores" id="amarillo" value="amarillo"> amarillo </input>
- <input type="radio" name="color_destructores" id="rojo" value="rojo"> rojo </input>
- <input type="radio" name="color_destructores" id="verde" value="verde"> verde </input>
- <input type="radio" name="color_destructores" id="azul" value="azul"> azul </input>
+      <input type="radio" name="color_destructores" id="amarillo" value="yellow"> amarillo </input>
+ <input type="radio" name="color_destructores" id="rojo" value="red"> rojo </input>
+ <input type="radio" name="color_destructores" id="verde" value="green"> verde </input>
+ <input type="radio" name="color_destructores" id="azul" value="blue"> azul </input>
 </div>
 
 </section>
@@ -87,10 +87,10 @@ session_start();
      <div class="div-form">
 
  <label for="color">Color de los submarinos</label>
-      <input type="radio" name="color_submarinos" id="amarillo" value="amarillo"> amarillo </input>
- <input type="radio" name="color_submarinos" id="rojo" value="rojo"> rojo </input>
- <input type="radio" name="color_submarinos" id="verde" value="verde"> verde </input>
- <input type="radio" name="color_submarinos" id="azul" value="azul"> azul </input>
+      <input type="radio" name="color_submarinos" id="amarillo" value="yellow"> amarillo </input>
+ <input type="radio" name="color_submarinos" id="rojo" value="red"> rojo </input>
+ <input type="radio" name="color_submarinos" id="verde" value="green"> verde </input>
+ <input type="radio" name="color_submarinos" id="azul" value="blue"> azul </input>
 </div>
 </section>
      <br>
@@ -105,10 +105,10 @@ session_start();
      <div class="div-form">
 
      <label for="color">Color del portaviones</label>
-      <input type="radio" name="color_portaviones" id="amarillo" value="amarillo"> amarillo </input>
- <input type="radio" name="color_portaviones" id="rojo" value="rojo"> rojo </input>
- <input type="radio" name="color_portaviones" id="verde" value="verde"> verde </input>
- <input type="radio" name="color_portaviones" id="azul" value="azul"> azul </input>
+      <input type="radio" name="color_portaviones" id="amarillo" value="yellow"> amarillo </input>
+ <input type="radio" name="color_portaviones" id="rojo" value="red"> rojo </input>
+ <input type="radio" name="color_portaviones" id="verde" value="green"> verde </input>
+ <input type="radio" name="color_portaviones" id="azul" value="blue"> azul </input>
 
 </div>
 </section>

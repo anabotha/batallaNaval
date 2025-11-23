@@ -61,7 +61,8 @@ switch ($tablero) {
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <title>Document</title>
      <link rel="stylesheet" href="./posiciones.css">
-
+     <script> const flota = <?php echo $jsonFlota; ?>;</script>
+     <script>const tablero = <?php echo $jsonTablero; ?>;</script>
 </head>
 <body>
       <div class="instrucciones">

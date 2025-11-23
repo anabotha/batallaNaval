@@ -1,4 +1,5 @@
 //busque las posiciones de los barcos.
+let ocupadas = JSON.parse(sessionStorage.getItem("ocupadas"));
 
 //calcule las posiciones de los barcos random de la compu
 
