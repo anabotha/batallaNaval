@@ -1,8 +1,14 @@
     const ocupadas_compu=JSON.parse(sessionStorage.getItem("ocupadas_compu") ||[])
     let esTurnoJugador=true;
     let tirosComputadora = new Set();  // Para no repetir tiros
-
-console.log("cpu",ocupadas_compu);
+    let aciertosComputadora=[{nombre:"submarino",cantidad:0},{nombre:"destructor",cantidad:0},{nombre:"acorazado",cantidad:0},{nombre:"portaviones",cantidad:0} ];
+    let aciertos=[{nombre:"submarino",cantidad:0},{nombre:"destructor",cantidad:0},{nombre:"acorazado",cantidad:0},{nombre:"portaviones",cantidad:0} ];
+    // para que no cuente hundimientos repetidos
+    let barcosHundidosJugador = new Set();
+    let barcosHundidosCPU = new Set();
+    let impactosCPU=[];
+    let impactosJugador=[];
+    console.log("cpu",ocupadas_compu);
 //busque las posiciones de los barcos.
 function colorearCeldasOcupadas(ocupadas) {
     ocupadas.forEach(({ fila, col, color }) => {
@@ -18,20 +24,54 @@ const manejoTurnos = () => {
     const divTurno = document.getElementById("turno");
 
     if (esTurnoJugador) {
-        // divTurno.innerText = "Tu turno para jugar";
     } else {
-        // divTurno.innerText = "Turno de la computadora";
         jugadaComputadora();
     }
 };
 
 const posicionElegida = (e) => {
-    const r = evaluaJugada(e);
-    manejoTurnos();
+    evaluaJugada(e);
+    
+    // finalizaJuego();
+     manejoTurnos();
 };
 
+function finalizaJuego() {
 
-//ataques de la compu
+    let jugadorGana = true;
+    let cpuGana = true;
+
+    aciertos.forEach(tipo => {
+        const total = flota[tipo.nombre]?.cantidad || 0; 
+        
+        if (tipo.cantidad < total) {
+            jugadorGana = false; 
+        }
+    });
+
+    aciertosComputadora.forEach(tipo => {
+        const total = flota[tipo.nombre]?.cantidad || 0;
+        
+        if (tipo.cantidad < total) {
+            cpuGana = false;
+        }
+    });
+
+    if (jugadorGana) {
+        alert("🎉 ¡GANASTE! Hundiste toda la flota enemiga.");
+        window.location.reload();
+        return true;
+    }
+
+    if (cpuGana) {
+        alert("💀 PERDISTE. La CPU hundió toda tu flota.");
+        window.location.reload();
+        return true;
+    }
+
+    return false;
+}
+
 function jugadaComputadora() {
 
     // obtener tus barcos desde sessionStorage
@@ -48,7 +88,7 @@ function jugadaComputadora() {
 
     // Registrar el tiro
     tirosComputadora.add(id);
-    const resultado=document.getElementById("resultado_en");
+    const resultado=document.getElementById("resultado");
     const cell = document.getElementById(id);
     if (!cell) return; // borde de seguridad
 
@@ -57,12 +97,19 @@ function jugadaComputadora() {
 
     if (impacto) {
         cell.innerText = "X";
-        resultado.innerText = ` impactó tu ${impacto.barco}`;
+        resultado.innerText = ` la cpu impactó tu ${impacto.barco}`;
         esTurnoJugador = false;
+        impactosCPU.push({
+        fila,
+        col,
+        barco: impacto.barco,
+        id: impacto.id
+    });
+
+        evaluaBarco(impacto.barco, "computadora",impacto.id); 
     } else {
         // agua
         cell.style.backgroundColor = "lightblue";
-        resultado.innerText = " tiró y falló";
 
         esTurnoJugador = true;
     }
@@ -71,6 +118,32 @@ function jugadaComputadora() {
     manejoTurnos();
 }
 
+function barcoHundido(tipo, atacante, id) {
+
+    const posiciones = atacante === "jugador"
+        ? JSON.parse(sessionStorage.getItem("ocupadas_compu") || "[]")
+        : JSON.parse(sessionStorage.getItem("ocupadas") || "[]");
+
+    // celdas del barco exacto
+    const celdasBarco = posiciones.filter(
+        c => c.barco === tipo && c.id === id
+    );
+
+    // Ver impactos (celda hundida)
+    const impactos = atacante === "jugador"
+        ? impactosJugador
+        : impactosCPU;
+
+    const celdasImpactadas = impactos.filter(
+        h => h.barco === tipo && h.id === id
+    );console.log(impactos,celdasBarco, celdasImpactadas);
+
+    return celdasImpactadas.length === celdasBarco.length;
+}
+
+
+
+    // contar aciertos por barco
 const evaluaJugada = (e) => {
     const resultadoDiv=document.getElementById("resultado");
 
@@ -81,9 +154,17 @@ const evaluaJugada = (e) => {
         return cell.id === id;
     });
 
-    if (resultado) {
-        cell.style.backgroundColor = "red";
-        resultadoDiv.innerText = ` ¡Impactaste el ${resultado.barco} de la computadora!`;
+    if (resultado) {;
+        impactosJugador.push({
+        fila: resultado.fila,
+        col: resultado.col,
+        barco: resultado.barco,
+        id: resultado.id
+    });
+    cell.innerText = "X";
+    cell.style.backgroundColor = "red";
+    resultadoDiv.innerText = ` ¡Impactaste el ${resultado.barco} de la computadora!`;
+    evaluaBarco(resultado.barco, "jugador",resultado.id); 
         return {
             impacto: true,
             barco: resultado.barco,
@@ -91,7 +172,7 @@ const evaluaJugada = (e) => {
             col: resultado.col
         };
     } else {
-        cell.style.backgroundColor = "blue";
+        cell.style.backgroundColor = "lightblue";
         resultadoDiv.innerText = " ¡Agua!";
         
         esTurnoJugador = false;
@@ -100,6 +181,35 @@ const evaluaJugada = (e) => {
             impacto: false,
             barco: null
         };
+    }
+};
+const evaluaBarco = (tipo, jugador, id) => {
+    const resultadoDiv=document.getElementById("resultado");
+    const hundidos=document.getElementById("hundidos");
+    const perdidos=document.getElementById("perdidos");
+    if (jugador === "jugador") {
+console.log(aciertos);
+        if (barcoHundido(tipo, "jugador",id) &&
+            !barcosHundidosJugador.has(tipo+"-"+id)) {
+console.log(tipo);
+            barcosHundidosJugador.add(tipo+"-"+id);
+            aciertos.find(b => b.nombre === tipo).cantidad++;
+
+            console.log("🔥 Hundiste", tipo, "#", id);
+    resultadoDiv.innerText = ` 🎉 ¡Hundiste el ${tipo} de la computadora!`;
+    hundidos.innerText = ` ${Array.from(barcosHundidosJugador).length}`;
+        }
+
+    } else {
+
+        if (barcoHundido(tipo, "cpu",id) &&
+            !barcosHundidosCPU.has(tipo+"-"+id)) {
+
+            barcosHundidosCPU.add(tipo+"-"+id);
+            aciertosComputadora.find(b => b.nombre === tipo).cantidad++;
+                perdidos.innerText = ` ${Array.from(barcosHundidosCPU).length}`;
+            resultadoDiv.innerText = ` 💀 La CPU hundió tu ${tipo}!`;
+        }
     }
 };
 

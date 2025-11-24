@@ -118,6 +118,7 @@ function ocuparCeldasCPU(barco, fila, col) {
         ocupadas_compu.push({
             fila: f,
             col:  c,
+            id: barco.index,
             barco: barco.tipo,
             orientacion: barco.orientacion,
             color: barco.color

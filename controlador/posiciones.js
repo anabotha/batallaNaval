@@ -85,6 +85,7 @@ const ocuparCeldas = (barco,fila,col) => {
 ocupadas.push({
     fila: f,
     col: c,
+    id: barco.index,
     barco: barco.tipo,     
     color: barco.color,
     orientacion:barco.orientacion

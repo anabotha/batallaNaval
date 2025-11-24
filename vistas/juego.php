@@ -100,11 +100,11 @@ $jsonTablero=json_encode([
           </ul>
           <div id="indicaciones">
           <p id="turno"></p>
-               <p id="mensaje_resultado"> Tus jugadas <span id="resultado"></span></p>
-               <p id="mensaje_resultado_en"> Jugadas de la CPU <span id="resultado_en"></span></p>
+               <p id="mensaje_resultado"> Info:  <span id="resultado"></span></p>
+               <!-- <p id="mensaje_resultado_en"> Jugadas de la CPU <span id="resultado_en"></span></p> -->
 
-               <p id="mensaje_hundidos"> Barcos hundidos : <span id="hundidos"></span></p>
-               <p id="mensaje_perdidos"> Barcos perdidos : <span id="perdidos"></span></p>
+               <p id="mensaje_hundidos"> Barcos hundidos : <span id="hundidos"> 0 </span></p>
+               <p id="mensaje_perdidos"> Barcos perdidos : <span id="perdidos"> 0</span></p>
 
                </div>  
           </div>  
