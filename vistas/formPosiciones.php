@@ -93,6 +93,8 @@ $jsonTablero = json_encode(["row" => $row, "col" => $col]);
     const tablero = <?php echo $jsonTablero; ?>;
 </script>
      <script src="../controlador/posiciones.js" defer></script>
+     <script src="../controlador/posiciones_cpu.js" defer></script>
+
 </head>
 <body>
      <div class="instrucciones">

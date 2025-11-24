@@ -99,6 +99,12 @@ $jsonTablero=json_encode([
                <li>Repita el proceso hasta que todas las embarcaciones estén sumergidas.</li>
           </ul>
           <div id="indicaciones">
+          <p id="turno"></p>
+               <p id="mensaje_resultado"> Tus jugadas <span id="resultado"></span></p>
+               <p id="mensaje_resultado_en"> Jugadas de la CPU <span id="resultado_en"></span></p>
+
+               <p id="mensaje_hundidos"> Barcos hundidos : <span id="hundidos"></span></p>
+               <p id="mensaje_perdidos"> Barcos perdidos : <span id="perdidos"></span></p>
 
                </div>  
           </div>  
@@ -112,11 +118,9 @@ $jsonTablero=json_encode([
                <?php endfor; ?>
           </div>
           <div class="tablero_enemigo_<?php echo $tab; ?>" id="tablero"">
-          <!-- <h2>Tablero Enemigo</h2> -->
-          <br>
                <?php for ($i = 0; $i < $row; $i++): ?>
                     <?php for ($j = 0; $j < $col; $j++): ?>
-                         <div class="cell_enemigo"></div>
+                         <div class="cell_enemigo"  id="<?php echo 'cell-en-' . $i . '-' . $j; ?>"></div>
                     <?php endfor; ?>
                <?php endfor; ?>
           </div>

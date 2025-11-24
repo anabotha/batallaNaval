@@ -2,7 +2,7 @@ console.log("Flota cargada:", flota);
 // VARIABLES GLOBALES
 // let ocupadas = new Set();
 let ocupadas = [];
-
+let ocupadas_compu=[];
 let listaBarcos = [];
 let barcoActualIndex = 0;
 let fin=false;
@@ -152,6 +152,8 @@ const siguienteBarco = () => {
 
     if (barcoActualIndex >= listaBarcos.length) {
         finalizarColocacion();
+colocarBarcosComputadora();
+console.log(ocupadas_compu);
         return;
     }
 
