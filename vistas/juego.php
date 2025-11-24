@@ -52,6 +52,32 @@ switch ($tablero) {
           # code...
           break;
 }
+
+$jsonFlota=json_encode([
+     'acorazados' => [
+          'cantidad' => $ac_cant,
+          'posicion' => $ac_pos,
+          'color'    => $ac_color
+     ],
+     'destructores' => [
+          'cantidad' => $des_cant,
+          'posicion' => $des_pos,
+          'color'    => $des_color
+     ],
+     'submarinos' => [
+          'cantidad' => $sub_cant,
+          'posicion' => $sub_pos,
+          'color'    => $sub_color
+     ],
+     'portaviones' => [
+          'posicion' => $porta_pos,
+          'color'    => $porta_color
+     ]
+]);
+$jsonTablero=json_encode([
+     'row' => $row,
+     'col' => $col
+]);
 ?>
 
 <!DOCTYPE html>
@@ -63,6 +89,7 @@ switch ($tablero) {
      <link rel="stylesheet" href="./posiciones.css">
      <script> const flota = <?php echo $jsonFlota; ?>;</script>
      <script>const tablero = <?php echo $jsonTablero; ?>;</script>
+     <script src="../controlador/juego.js" defer></script>
 </head>
 <body>
       <div class="instrucciones">
