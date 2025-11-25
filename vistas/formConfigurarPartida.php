@@ -12,7 +12,10 @@ session_start();
      <script src="../controlador/configurarPartida.js" defer></script>
 </head>
 <body>
-  
+  <header>
+</header>
+<main>
+     <h1> Configurar partida </h1>
 <form method="POST" action="../controlador/configurarPartida.php">
 
       <div class="div-form">
@@ -114,6 +117,8 @@ session_start();
 <br>
      <button type="submit" id="posiciones" > Posiciones </button>
      </form>
-
+</main>
+<footer>
+</footer>
 </body>
 </html>

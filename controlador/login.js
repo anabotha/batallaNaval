@@ -20,6 +20,7 @@ function buscaNombre(usuario, contraseña) {
             gestionarRtas(respuesta);
         }
     };
+     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
     console.log(usuario,contraseña);
     let data = new FormData();

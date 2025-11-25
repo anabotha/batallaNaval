@@ -25,11 +25,10 @@ if ($nick) {
 </head>
 
 <body id="body">
-      <div class="header">
-    <!-- <div><h1>BATALLA NAVAL</h1></div> -->
-    
-  </div>
-
+      <header>
+     <h1> Lobby de Batalla Naval </h1>
+</header>
+<main>
     <div class="ultima-partida">
         <h1>Última Partida</h1>
     <?php if ($ultima): ?>
@@ -57,4 +56,7 @@ if ($nick) {
         <input type="hidden" name="nick" value="<?= $nick ?>">
         <button type="submit">Configurar partida</button>
     </form>
+    </main>
+        <footer>
+</footer>
 </html>

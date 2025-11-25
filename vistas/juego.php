@@ -86,27 +86,33 @@ $jsonTablero=json_encode([
      <meta charset="UTF-8">
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <title>Document</title>
+     <link rel="stylesheet" href="./juego.css">
      <link rel="stylesheet" href="./posiciones.css">
+
      <script> const flota = <?php echo $jsonFlota; ?>;</script>
      <script>const tablero = <?php echo $jsonTablero; ?>;</script>
      <script src="../controlador/juego.js" defer></script>
 </head>
 <body>
+     <header>
+</header>
+     <main>
       <div class="instrucciones">
           <h2>Instrucciones para atacar las embarcaciones:</h2>
           <ul>
                <li>Haga clic en una celda del tablero enemigo para atacar una embarcación.</li>
                <li>Repita el proceso hasta que todas las embarcaciones estén sumergidas.</li>
           </ul>
-          <div id="indicaciones">
-          <p id="turno"></p>
+          <div id="indicaciones" class="indicaciones">
+               <button id="pista_btn" onclick="darPista()">Pista</button>
+               <p id="pista"></p>
                <p id="mensaje_resultado"> Info:  <span id="resultado"></span></p>
+          </div>  
                <!-- <p id="mensaje_resultado_en"> Jugadas de la CPU <span id="resultado_en"></span></p> -->
-
+     <section id="estadisticas" class="estadisticas">
                <p id="mensaje_hundidos"> Barcos hundidos : <span id="hundidos"> 0 </span></p>
                <p id="mensaje_perdidos"> Barcos perdidos : <span id="perdidos"> 0</span></p>
-
-               </div>  
+</section>
           </div>  
      <div class="contenedor_tableros">   
                     <div class="tablero_<?php echo $tab; ?>" id="tablero">
@@ -125,5 +131,8 @@ $jsonTablero=json_encode([
                <?php endfor; ?>
           </div>
      </div>
+     </main>
+<footer>
+</footer>
 </body>
 </html>

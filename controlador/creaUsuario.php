@@ -1,9 +1,8 @@
 <?php
-if (isset($_GET['obj'])) {
-$json_string = $_GET['obj'];
+if (isset($_POST['obj'])) {//post
+$json_string = $_POST['obj'];
 $data = json_decode($json_string);
 $nick = trim($data->nickname);
-$fechaNac = trim($data->fechaNacimiento);
 $email = trim($data->email);
 $contra=trim($data->password);
 
@@ -19,7 +18,7 @@ $nombreExiste = existeNombre($nick);
 $emailExiste = existeEmail($email);
 
 if (!$nombreExiste && !$emailExiste) {
-creaUsuario($nick, $fechaNac, $email,$contra);
+creaUsuario($nick, $email,$contra);
 } else {
 responderJson([
      "nickname" => $nick,
@@ -112,15 +111,15 @@ $db->close();
 return $resultado;
 }
 
-function creaUsuario($nick, $fechaNac, $email,$contra) {
+function creaUsuario($nick, $email,$contra) {
 $json_temp = new stdClass();
 
      $db = new mysqli("localhost", "root", "", "batallanaval");
      $db->set_charset("utf8mb4");
 
      $insert = "INSERT INTO Usuarios (
-          nickname, fechaNacimiento,  email
-     ) VALUES ('$nick', '$fechaNac', '$email');";
+          nickname,  email
+     ) VALUES ('$nick', '$email');";
 
      $db->query($insert);
 

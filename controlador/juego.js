@@ -1,3 +1,4 @@
+
 //variables globales
 let esTurnoJugador = true;
 let tirosComputadora = new Set(); // Para no repetir tiros
@@ -17,9 +18,11 @@ let aciertos = [
   { nombre: "acorazado", cantidad: 0 },
   { nombre: "portaviones", cantidad: 0 },
 ];
-const ocupadas_compu = JSON.parse(
-  sessionStorage.getItem("ocupadas_compu") || []
-);
+let pista=false;
+let pistaComputadora=false;
+const ocupadas_compu = JSON.parse(sessionStorage.getItem("ocupadas_compu") || "[]");
+const totalBarcos=calcularTotalBarcos();
+console.log("totalBarcos",totalBarcos);
 console.log("cpu", ocupadas_compu);
 // event listener
 document.addEventListener("DOMContentLoaded", () => {
@@ -31,6 +34,22 @@ document.addEventListener("DOMContentLoaded", () => {
     cell.addEventListener("click", posicionElegida);
   });
 });
+
+
+//calcule la cantidad de barcos
+function calcularTotalBarcos() {
+  const flota = JSON.parse(sessionStorage.getItem("flota") || "{}");
+
+  let total = 0;
+
+  Object.values(flota).forEach(tipo => {
+    total += tipo.cantidad;
+  });
+
+  console.log("Total barcos:", total);
+  return total;
+}
+
 //busque las posiciones de los barcos.
 function colorearCeldasOcupadas(ocupadas) {
   ocupadas.forEach(({ fila, col, color }) => {
@@ -46,10 +65,12 @@ const posicionElegida = (e) => {
   evaluaJugada(e);
 
   // finalizaJuego();
+  if(!finalizaJuego()){ 
   if (!esTurnoJugador) {
     jugadaComputadora();
   }
 };
+}
 
 function jugadaComputadora() {
   // obtener tus barcos desde sessionStorage
@@ -77,7 +98,7 @@ function jugadaComputadora() {
 
   if (impacto) {
     cell.innerText = "X";
-    resultado.innerText = ` la cpu impactó tu ${impacto.barco}`;
+    resultado.innerText = ` La CPU impactó tu ${impacto.barco}`;
     esTurnoJugador = false;
     impactosCPU.push({
       fila,
@@ -177,42 +198,82 @@ const evaluaBarco = (tipo, jugador, id) => {
   }
 };
 
+function pistaValida(pistaBarco){
+  if (impactosJugador.some(impacto => impacto.fila === pistaBarco.fila && impacto.col === pistaBarco.col)) {
+    console.log("pistaBarco",pistaBarco,false);
+        return false; // ya fue impactado
+    } else{
+      return true;
+    }
+}
 //pedir pista
+function darPista(){
+  pista=true;
+  const ocupadas = JSON.parse(sessionStorage.getItem("ocupadas_compu") || "[]");
+  const pistaDiv= document.getElementById("pista");
+  const btnPista= document.getElementById("pista_btn");
+  btnPista.style.display="none"; //ocultar boton pista despues de usarlo
+  if(ocupadas.length>0){
+    const randomIndex = Math.floor(Math.random() * ocupadas.length);
+    const pistaBarco = ocupadas[randomIndex];
+    if (!pistaValida(pistaBarco)){
+      darPista(); //llamar recursivamente hasta encontrar una pista valida
+    }else{
+      pistaDiv.innerHTML=` <h2>Pista:</h2>
+        <p>El ${pistaBarco.barco} está en la fila ${(pistaBarco.fila + 1)}, columna ${(pistaBarco.col + 1)}.</p>
+      `;
+    }
+    
+  }
 
+}
 //guardar cambios
 
-// function finalizaJuego() {
+//evalua si finaliza el juego. 
+function finalizaJuego() {
 
-//     let jugadorGana = true;
-//     let cpuGana = true;
+    let jugadorGana = false;
+    let cpuGana = false;
+    let cantBarcos=0;
+    let fin= false;
+  
+    aciertos.forEach(tipo => {
+        cantBarcos+=tipo.cantidad
+        console.log("tipo",tipo.nombre,tipo.cantidad);
+        if (cantBarcos<totalBarcos){
+          fin=false;
+        }else{
+          fin=true;
+          console.log("fin");
+          jugadorGana = true;
+        }
+    });
+    aciertosComputadora.forEach(tipo => {
+      if (cantBarcos<totalBarcos){
+          fin=false;
+        }else{
+          fin=true;
+            cpuGana = true;
+        }
+      }
+    );
 
-//     aciertos.forEach(tipo => {
-//         const total = flota[tipo.nombre]?.cantidad || 0;
+    if (jugadorGana) {
+        alert("🎉 ¡GANASTE! Hundiste toda la flota enemiga.");
+        window.location.reload();
+        irFinalizar();
+        return true;    }
 
-//         if (tipo.cantidad < total) {
-//             jugadorGana = false;
-//         }
-//     });
+    if (cpuGana) {
+        alert("💀 PERDISTE. La CPU hundió toda tu flota.");
+        window.location.reload();
+        irFinalizar();
+        return true;
+    }
+    // irFinalizar();
+    return false;
+}
 
-//     aciertosComputadora.forEach(tipo => {
-//         const total = flota[tipo.nombre]?.cantidad || 0;
-
-//         if (tipo.cantidad < total) {
-//             cpuGana = false;
-//         }
-//     });
-
-//     if (jugadorGana) {
-//         alert("🎉 ¡GANASTE! Hundiste toda la flota enemiga.");
-//         window.location.reload();
-//         return true;
-//     }
-
-//     if (cpuGana) {
-//         alert("💀 PERDISTE. La CPU hundió toda tu flota.");
-//         window.location.reload();
-//         return true;
-//     }
-
-//     return false;
-// }
+function irFinalizar() {
+    window.location.href = "finalizar.html";
+}

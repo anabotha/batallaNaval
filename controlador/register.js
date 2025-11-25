@@ -28,8 +28,11 @@ function creaUsuario(usuario) {
                gestionarRespuestas(respuesta);
           }
      };
-     xhr.open("GET", "creaUsuario.php?obj=" + encodeURIComponent(usuario), true);
-     xhr.send();
+    let data = new FormData();
+    console.log(usuario);
+    data.append("nick", usuario);
+     xhr.open("POST", "creaUsuario.php", true);
+     xhr.send(data);
 }
 
 function gestionarRespuestas(usuario) {

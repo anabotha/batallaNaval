@@ -1,0 +1,13 @@
+.indicaciones{
+display: flex;
+justify-content: center;
+align-items: center;
+     margin-top: 0px;
+     flex-direction: column;
+}
+.estadisticas{
+     display: flex;
+     justify-content: space-around;
+     margin-top: 10px;
+     flex-direction: row;
+}

@@ -1,4 +1,5 @@
 console.log("Flota cargada:", flota);
+sessionStorage.setItem("flota", JSON.stringify(flota));
 // VARIABLES GLOBALES
 // let ocupadas = new Set();
 let ocupadas = [];
