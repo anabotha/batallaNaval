@@ -1,235 +1,218 @@
-    const ocupadas_compu=JSON.parse(sessionStorage.getItem("ocupadas_compu") ||[])
-    let esTurnoJugador=true;
-    let tirosComputadora = new Set();  // Para no repetir tiros
-    let aciertosComputadora=[{nombre:"submarino",cantidad:0},{nombre:"destructor",cantidad:0},{nombre:"acorazado",cantidad:0},{nombre:"portaviones",cantidad:0} ];
-    let aciertos=[{nombre:"submarino",cantidad:0},{nombre:"destructor",cantidad:0},{nombre:"acorazado",cantidad:0},{nombre:"portaviones",cantidad:0} ];
-    // para que no cuente hundimientos repetidos
-    let barcosHundidosJugador = new Set();
-    let barcosHundidosCPU = new Set();
-    let impactosCPU=[];
-    let impactosJugador=[];
-    console.log("cpu",ocupadas_compu);
+//variables globales
+let esTurnoJugador = true;
+let tirosComputadora = new Set(); // Para no repetir tiros
+let barcosHundidosCPU = new Set();
+let barcosHundidosJugador = new Set();
+let impactosCPU = [];
+let impactosJugador = [];
+let aciertosComputadora = [
+  { nombre: "submarino", cantidad: 0 },
+  { nombre: "destructor", cantidad: 0 },
+  { nombre: "acorazado", cantidad: 0 },
+  { nombre: "portaviones", cantidad: 0 },
+];
+let aciertos = [
+  { nombre: "submarino", cantidad: 0 },
+  { nombre: "destructor", cantidad: 0 },
+  { nombre: "acorazado", cantidad: 0 },
+  { nombre: "portaviones", cantidad: 0 },
+];
+const ocupadas_compu = JSON.parse(
+  sessionStorage.getItem("ocupadas_compu") || []
+);
+console.log("cpu", ocupadas_compu);
+// event listener
+document.addEventListener("DOMContentLoaded", () => {
+  const cells_en = document.querySelectorAll(".cell_enemigo");
+  const ocupadas = JSON.parse(sessionStorage.getItem("ocupadas") || "[]");
+  console.log(ocupadas);
+  colorearCeldasOcupadas(ocupadas);
+  cells_en.forEach((cell) => {
+    cell.addEventListener("click", posicionElegida);
+  });
+});
 //busque las posiciones de los barcos.
 function colorearCeldasOcupadas(ocupadas) {
-    ocupadas.forEach(({ fila, col, color }) => {
-        const id = `cell-${fila}-${col}`;
-        const cell = document.getElementById(id);
-        if (cell) {
-            cell.style.backgroundColor = color;
-        }
-    });
-}
-const manejoTurnos = () => {
-
-    const divTurno = document.getElementById("turno");
-
-    if (esTurnoJugador) {
-    } else {
-        jugadaComputadora();
+  ocupadas.forEach(({ fila, col, color }) => {
+    const id = `cell-${fila}-${col}`;
+    const cell = document.getElementById(id);
+    if (cell) {
+      cell.style.backgroundColor = color;
     }
-};
+  });
+}
 
 const posicionElegida = (e) => {
-    evaluaJugada(e);
-    
-    // finalizaJuego();
-     manejoTurnos();
+  evaluaJugada(e);
+
+  // finalizaJuego();
+  if (!esTurnoJugador) {
+    jugadaComputadora();
+  }
 };
 
-function finalizaJuego() {
-
-    let jugadorGana = true;
-    let cpuGana = true;
-
-    aciertos.forEach(tipo => {
-        const total = flota[tipo.nombre]?.cantidad || 0; 
-        
-        if (tipo.cantidad < total) {
-            jugadorGana = false; 
-        }
-    });
-
-    aciertosComputadora.forEach(tipo => {
-        const total = flota[tipo.nombre]?.cantidad || 0;
-        
-        if (tipo.cantidad < total) {
-            cpuGana = false;
-        }
-    });
-
-    if (jugadorGana) {
-        alert("🎉 ¡GANASTE! Hundiste toda la flota enemiga.");
-        window.location.reload();
-        return true;
-    }
-
-    if (cpuGana) {
-        alert("💀 PERDISTE. La CPU hundió toda tu flota.");
-        window.location.reload();
-        return true;
-    }
-
-    return false;
-}
-
 function jugadaComputadora() {
+  // obtener tus barcos desde sessionStorage
+  const ocupadasJugador = JSON.parse(
+    sessionStorage.getItem("ocupadas") || "[]"
+  );
 
-    // obtener tus barcos desde sessionStorage
-    const ocupadasJugador = JSON.parse(sessionStorage.getItem("ocupadas") || "[]");
+  let fila, col, id;
 
-    let fila, col, id;
+  // Buscar una posición no repetida
+  do {
+    fila = Math.floor(Math.random() * tablero.row);
+    col = Math.floor(Math.random() * tablero.col);
+    id = `cell-${fila}-${col}`;
+  } while (tirosComputadora.has(id));
 
-    // Buscar una posición no repetida
-    do {
-        fila = Math.floor(Math.random() * tablero.row);
-        col = Math.floor(Math.random() * tablero.col);
-        id = `cell-${fila}-${col}`;
-    } while (tirosComputadora.has(id));
+  // Registrar el tiro
+  tirosComputadora.add(id);
+  const resultado = document.getElementById("resultado");
+  const cell = document.getElementById(id);
+  if (!cell) return; // borde de seguridad
 
-    // Registrar el tiro
-    tirosComputadora.add(id);
-    const resultado=document.getElementById("resultado");
-    const cell = document.getElementById(id);
-    if (!cell) return; // borde de seguridad
+  // verificar impacto
+  const impacto = ocupadasJugador.find((b) => b.fila === fila && b.col === col);
 
-    // verificar impacto 
-    const impacto = ocupadasJugador.find(b => b.fila === fila && b.col === col);
-
-    if (impacto) {
-        cell.innerText = "X";
-        resultado.innerText = ` la cpu impactó tu ${impacto.barco}`;
-        esTurnoJugador = false;
-        impactosCPU.push({
-        fila,
-        col,
-        barco: impacto.barco,
-        id: impacto.id
+  if (impacto) {
+    cell.innerText = "X";
+    resultado.innerText = ` la cpu impactó tu ${impacto.barco}`;
+    esTurnoJugador = false;
+    impactosCPU.push({
+      fila,
+      col,
+      barco: impacto.barco,
+      id: impacto.id,
     });
 
-        evaluaBarco(impacto.barco, "computadora",impacto.id); 
-    } else {
-        // agua
-        cell.style.backgroundColor = "lightblue";
+    evaluaBarco(impacto.barco, "computadora", impacto.id);
+  } else {
+    // agua
+    cell.style.backgroundColor = "lightblue";
 
-        esTurnoJugador = true;
-    }
-
-    // actualizar cartel de turno
-    manejoTurnos();
+    esTurnoJugador = true;
+  }
 }
 
 function barcoHundido(tipo, atacante, id) {
+  const posiciones =
+    atacante === "jugador"
+      ? JSON.parse(sessionStorage.getItem("ocupadas_compu") || "[]")
+      : JSON.parse(sessionStorage.getItem("ocupadas") || "[]");
 
-    const posiciones = atacante === "jugador"
-        ? JSON.parse(sessionStorage.getItem("ocupadas_compu") || "[]")
-        : JSON.parse(sessionStorage.getItem("ocupadas") || "[]");
+  // celdas del barco exacto
+  const celdasBarco = posiciones.filter((c) => c.barco === tipo && c.id === id);
 
-    // celdas del barco exacto
-    const celdasBarco = posiciones.filter(
-        c => c.barco === tipo && c.id === id
-    );
+  // Ver impactos (celda hundida)
+  const impactos = atacante === "jugador" ? impactosJugador : impactosCPU;
 
-    // Ver impactos (celda hundida)
-    const impactos = atacante === "jugador"
-        ? impactosJugador
-        : impactosCPU;
+  const celdasImpactadas = impactos.filter(
+    (h) => h.barco === tipo && h.id === id
+  );
+  console.log(impactos, celdasBarco, celdasImpactadas);
 
-    const celdasImpactadas = impactos.filter(
-        h => h.barco === tipo && h.id === id
-    );console.log(impactos,celdasBarco, celdasImpactadas);
-
-    return celdasImpactadas.length === celdasBarco.length;
+  return celdasImpactadas.length === celdasBarco.length;
 }
 
-
-
-    // contar aciertos por barco
+// contar aciertos por barco
 const evaluaJugada = (e) => {
-    const resultadoDiv=document.getElementById("resultado");
+  const resultadoDiv = document.getElementById("resultado");
+  const cell = document.getElementById(e.target.id);
 
-    const cell = document.getElementById(e.target.id);
-    cell.removeEventListener("click", posicionElegida); // evitar re-click
-    const resultado = ocupadas_compu.find(b => {
-        const id = `cell-en-${b.fila}-${b.col}`;
-        return cell.id === id;
+  cell.removeEventListener("click", posicionElegida); // evitar re-click
+
+  const resultado = ocupadas_compu.find((b) => {
+    const id = `cell-en-${b.fila}-${b.col}`;
+    return cell.id === id;
+  });
+
+  if (resultado) {
+    impactosJugador.push({
+      fila: resultado.fila,
+      col: resultado.col,
+      barco: resultado.barco,
+      id: resultado.id,
     });
 
-    if (resultado) {;
-        impactosJugador.push({
-        fila: resultado.fila,
-        col: resultado.col,
-        barco: resultado.barco,
-        id: resultado.id
-    });
     cell.innerText = "X";
     cell.style.backgroundColor = "red";
     resultadoDiv.innerText = ` ¡Impactaste el ${resultado.barco} de la computadora!`;
-    evaluaBarco(resultado.barco, "jugador",resultado.id); 
-        return {
-            impacto: true,
-            barco: resultado.barco,
-            fila: resultado.fila,
-            col: resultado.col
-        };
-    } else {
-        cell.style.backgroundColor = "lightblue";
-        resultadoDiv.innerText = " ¡Agua!";
-        
-        esTurnoJugador = false;
-
-        return {
-            impacto: false,
-            barco: null
-        };
-    }
+    evaluaBarco(resultado.barco, "jugador", resultado.id);
+  } else {
+    cell.style.backgroundColor = "lightblue";
+    resultadoDiv.innerText = " ¡Agua!";
+    esTurnoJugador = false;
+  }
 };
+
 const evaluaBarco = (tipo, jugador, id) => {
-    const resultadoDiv=document.getElementById("resultado");
-    const hundidos=document.getElementById("hundidos");
-    const perdidos=document.getElementById("perdidos");
-    if (jugador === "jugador") {
-console.log(aciertos);
-        if (barcoHundido(tipo, "jugador",id) &&
-            !barcosHundidosJugador.has(tipo+"-"+id)) {
-console.log(tipo);
-            barcosHundidosJugador.add(tipo+"-"+id);
-            aciertos.find(b => b.nombre === tipo).cantidad++;
+  const resultadoDiv = document.getElementById("resultado");
+  const hundidos = document.getElementById("hundidos");
+  const perdidos = document.getElementById("perdidos");
+  if (jugador === "jugador") {
+    console.log(aciertos);
+    if (
+      barcoHundido(tipo, "jugador", id) &&
+      !barcosHundidosJugador.has(tipo + "-" + id)
+    ) {
+      console.log(tipo);
+      barcosHundidosJugador.add(tipo + "-" + id);
+      aciertos.find((b) => b.nombre === tipo).cantidad++;
 
-            console.log("🔥 Hundiste", tipo, "#", id);
-    resultadoDiv.innerText = ` 🎉 ¡Hundiste el ${tipo} de la computadora!`;
-    hundidos.innerText = ` ${Array.from(barcosHundidosJugador).length}`;
-        }
-
-    } else {
-
-        if (barcoHundido(tipo, "cpu",id) &&
-            !barcosHundidosCPU.has(tipo+"-"+id)) {
-
-            barcosHundidosCPU.add(tipo+"-"+id);
-            aciertosComputadora.find(b => b.nombre === tipo).cantidad++;
-                perdidos.innerText = ` ${Array.from(barcosHundidosCPU).length}`;
-            resultadoDiv.innerText = ` 💀 La CPU hundió tu ${tipo}!`;
-        }
+      console.log(" Hundiste", tipo, "#", id);
+      resultadoDiv.innerText = ` 🎉 ¡Hundiste el ${tipo} de la computadora!`;
+      hundidos.innerText = ` ${Array.from(barcosHundidosJugador).length}`;
     }
+  } else {
+    if (
+      barcoHundido(tipo, "cpu", id) &&
+      !barcosHundidosCPU.has(tipo + "-" + id)
+    ) {
+      barcosHundidosCPU.add(tipo + "-" + id);
+      aciertosComputadora.find((b) => b.nombre === tipo).cantidad++;
+      perdidos.innerText = ` ${Array.from(barcosHundidosCPU).length}`;
+      resultadoDiv.innerText = ` 💀 La CPU hundió tu ${tipo}!`;
+    }
+  }
 };
 
 //pedir pista
 
-//guardar cambios 
+//guardar cambios
 
-// event listener
-document.addEventListener("DOMContentLoaded", () => {
-    const cells_en = document.querySelectorAll(".cell_enemigo");
+// function finalizaJuego() {
 
-    
-    const ocupadas = JSON.parse(sessionStorage.getItem("ocupadas") || "[]");
-    console.log(ocupadas);
-    colorearCeldasOcupadas(ocupadas);
-    
+//     let jugadorGana = true;
+//     let cpuGana = true;
 
-     cells_en.forEach(cell=>{
-          cell.addEventListener("click", posicionElegida);
+//     aciertos.forEach(tipo => {
+//         const total = flota[tipo.nombre]?.cantidad || 0;
 
-     });
-    
-});
+//         if (tipo.cantidad < total) {
+//             jugadorGana = false;
+//         }
+//     });
+
+//     aciertosComputadora.forEach(tipo => {
+//         const total = flota[tipo.nombre]?.cantidad || 0;
+
+//         if (tipo.cantidad < total) {
+//             cpuGana = false;
+//         }
+//     });
+
+//     if (jugadorGana) {
+//         alert("🎉 ¡GANASTE! Hundiste toda la flota enemiga.");
+//         window.location.reload();
+//         return true;
+//     }
+
+//     if (cpuGana) {
+//         alert("💀 PERDISTE. La CPU hundió toda tu flota.");
+//         window.location.reload();
+//         return true;
+//     }
+
+//     return false;
+// }
