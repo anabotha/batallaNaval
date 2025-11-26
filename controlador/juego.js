@@ -18,6 +18,8 @@ let aciertos = [
   { nombre: "acorazado", cantidad: 0 },
   { nombre: "portaviones", cantidad: 0 },
 ];
+let tiempoTranscurrido = 0;
+let intervaloReloj = null;
 let pista=false;
 let pistaComputadora=false;
 const ocupadas_compu = JSON.parse(sessionStorage.getItem("ocupadas_compu") || "[]");
@@ -26,6 +28,9 @@ console.log("totalBarcos",totalBarcos);
 console.log("cpu", ocupadas_compu);
 // event listener
 document.addEventListener("DOMContentLoaded", () => {
+  const inicio = Date.now();
+  sessionStorage.setItem("inicioPartida", inicio);
+  reloj();
   const cells_en = document.querySelectorAll(".cell_enemigo");
   const ocupadas = JSON.parse(sessionStorage.getItem("ocupadas") || "[]");
   console.log(ocupadas);
@@ -74,12 +79,21 @@ const posicionElegida = (e) => {
 
 function jugadaComputadora() {
   // obtener tus barcos desde sessionStorage
+  let jugada={};
+  if(pista && !pistaComputadora){
+    jugada=darPistaComputadora();
+    console.log("jugada",jugada);
+  }
   const ocupadasJugador = JSON.parse(
     sessionStorage.getItem("ocupadas") || "[]"
   );
-
   let fila, col, id;
-
+  if (pistaComputadora && jugada!={}){
+    fila=jugada.fila;
+    col=jugada.col;
+    id = `cell-${fila}-${col}`;
+  }else
+{
   // Buscar una posición no repetida
   do {
     fila = Math.floor(Math.random() * tablero.row);
@@ -87,12 +101,12 @@ function jugadaComputadora() {
     id = `cell-${fila}-${col}`;
   } while (tirosComputadora.has(id));
 
-  // Registrar el tiro
-  tirosComputadora.add(id);
-  const resultado = document.getElementById("resultado");
-  const cell = document.getElementById(id);
-  if (!cell) return; // borde de seguridad
-
+}
+// Registrar el tiro
+tirosComputadora.add(id);
+const cell = document.getElementById(id);
+if (!cell) return; // borde de seguridad
+const resultado = document.getElementById("resultado"); 
   // verificar impacto
   const impacto = ocupadasJugador.find((b) => b.fila === fila && b.col === col);
 
@@ -198,11 +212,25 @@ const evaluaBarco = (tipo, jugador, id) => {
   }
 };
 
+function darPistaComputadora(){
+  pistaComputadora=true;
+  const ocupadasJugador = JSON.parse(sessionStorage.getItem("ocupadas") || "[]");
+  if(ocupadasJugador.length>0){
+    const randomIndex = Math.floor(Math.random() * ocupadasJugador.length);
+    const pistaBarco = ocupadasJugador[randomIndex];
+    if (!pistaValida(pistaBarco)){
+      darPistaComputadora(); //llamar recursivamente hasta encontrar una pista valida
+    }
+    console.log("pistaBarco",pistaBarco);
+    return {fila:pistaBarco.fila, col:pistaBarco.col};
+      }}
+
 function pistaValida(pistaBarco){
-  if (impactosJugador.some(impacto => impacto.fila === pistaBarco.fila && impacto.col === pistaBarco.col)) {
+  if (impactosJugador.some(impacto => impacto.fila === pistaBarco.fila && impacto.col === pistaBarco.col && pistaBarco.id===impacto.id)) {
     console.log("pistaBarco",pistaBarco,false);
         return false; // ya fue impactado
     } else{
+      
       return true;
     }
 }
@@ -219,16 +247,64 @@ function darPista(){
     if (!pistaValida(pistaBarco)){
       darPista(); //llamar recursivamente hasta encontrar una pista valida
     }else{
-      pistaDiv.innerHTML=` <h2>Pista:</h2>
-        <p>El ${pistaBarco.barco} está en la fila ${(pistaBarco.fila + 1)}, columna ${(pistaBarco.col + 1)}.</p>
-      `;
+      // pistaDiv.innerHTML=` <h2>Pista:</h2>
+        // <p>El ${pistaBarco.barco} está en la fila ${(pistaBarco.fila + 1)}, columna ${(pistaBarco.col + 1)}.</p>
+      // `;
+      let celda=document.getElementById("cell-en-" + pistaBarco.fila + "-" + pistaBarco.col );
+      celda.style.backgroundColor = "yellow";
+      setTimeout(() => {
+        if (celda.style.backgroundColor === "yellow") {
+        celda.style.backgroundColor = "white";}
+      }, 15000);
+    }
     }
     
-  }
+  
 
 }
 //guardar cambios
+//abandonar partida
+function abandonarPartida() {
+  let confirmar = confirm("¿Estás seguro de que deseas abandonar la partida?");
+  if (confirmar) {
+      alert("Has abandonado la partida. La CPU será declarada ganadora.");
+  }
+  detenerReloj();
+  irLobby();
+}
 
+//tiempo
+
+
+function reloj() {
+  tiempoTranscurrido = 0;
+
+  intervaloReloj = setInterval(() => {
+    tiempoTranscurrido++;
+
+    const minutos = Math.floor(tiempoTranscurrido / 60);
+    const segundos = tiempoTranscurrido % 60;
+
+    const tiempoFormateado = 
+      `${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
+
+    document.getElementById('tiempo').textContent = tiempoFormateado;
+  }, 1000);
+}
+
+function detenerReloj() {
+  clearInterval(intervaloReloj);
+}
+
+function calcularTiempo(){
+  const inicio = Number(sessionStorage.getItem("inicioPartida"));
+const fin = Number(sessionStorage.getItem("finPartida"));
+
+const duracionMs = fin - inicio;
+
+const duracionSeg = Math.floor(duracionMs / 1000);
+return duracionSeg;
+}
 //evalua si finaliza el juego. 
 function finalizaJuego() {
 
@@ -260,20 +336,60 @@ function finalizaJuego() {
 
     if (jugadorGana) {
         alert("🎉 ¡GANASTE! Hundiste toda la flota enemiga.");
-        window.location.reload();
-        irFinalizar();
+        const fin = Date.now();
+        sessionStorage.setItem("finPartida", fin);
+        detenerReloj();
+        agregaPartidaBd("jugador");
+        // irFinalizar();
+        
         return true;    }
 
     if (cpuGana) {
         alert("💀 PERDISTE. La CPU hundió toda tu flota.");
-        window.location.reload();
-        irFinalizar();
+        const fin = Date.now();
+        sessionStorage.setItem("finPartida", fin);
+        detenerReloj();
+        agregaPartidaBd("computadora");
+        // irFinalizar();
         return true;
     }
     // irFinalizar();
     return false;
 }
+function agregaPartidaBd(ganador) {
+     
+  if (ganador==="jugador"){
+    ganoJugador=true;
+    ganoComputadora=false;
+  }else {
+    ganoJugador=false;
+    ganoComputadora=true;
+  }
 
+  let infoPartida={
+      usuario: sessionStorage.getItem("user") , // no anda el user
+      ganoJugador: ganoJugador,
+      ganoComputadora: ganoComputadora,
+      tiempo: calcularTiempo(),
+  }
+  console.log("infoPartida",infoPartida);
+     let xhr = new XMLHttpRequest();
+     xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+
+               let respuesta = JSON.parse(xhr.responseText);
+              //  irAResults();
+          }
+     };
+     xhr.open("GET", "agregaPartidas.php?resultado=" + encodeURIComponent(JSON.stringify(infoPartida)), true);
+
+     xhr.send();//no anda
+}
+
+//dirigir
+function irLobby(){
+  window.location.href = "lobby.php";
+}
 function irFinalizar() {
-    window.location.href = "finalizar.html";
+    window.location.href = "fin.php";
 }
