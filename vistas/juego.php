@@ -97,13 +97,21 @@ $jsonTablero=json_encode([
      <header>
 </header>
      <main>
-      <div class="instrucciones">
-          <h2>Instrucciones para atacar las embarcaciones:</h2>
-          <ul>
-               <li>Haga clic en una celda del tablero enemigo para atacar una embarcación.</li>
-               <li>Repita el proceso hasta que todas las embarcaciones estén sumergidas.</li>
-          </ul>
+          <div class="instrucciones">
+               
+               <h2>Instrucciones para atacar las embarcaciones:</h2>
+               <ul>
+                    <li>Haga clic en una celda del tablero enemigo para atacar una embarcación.</li>
+                    <li>Repita el proceso hasta que todas las embarcaciones estén sumergidas.</li>
+               </ul>
+               <div class="reloj" id="reloj">
+                    <h2>Tiempo transcurrido:</h2>
+                    <p id="tiempo">00:00</p>
+     </div>
+          <button id="finalizar_btn" onclick="abandonarPartida()">Abandonar partida</button>
+
           <div id="indicaciones" class="indicaciones">
+
                <button id="pista_btn" onclick="darPista()">Pista</button>
                <p id="pista"></p>
                <p id="mensaje_resultado"> Info:  <span id="resultado"></span></p>
@@ -130,6 +138,9 @@ $jsonTablero=json_encode([
                     <?php endfor; ?>
                <?php endfor; ?>
           </div>
+     </div>
+     <div>
+          <h3>Records</h3>
      </div>
      </main>
 <footer>
