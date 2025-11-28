@@ -25,11 +25,10 @@ if ($nick) {
 
 <body id="body">
       <header>
-     <h1> Lobby de Batalla Naval </h1>
+          <h1>Última Partida</h1>
 </header>
 <main>
     <div class="ultima-partida">
-        <h1>Última Partida</h1>
     <?php if ($ultima): ?>
         <section>
         <p><strong>Fecha: </strong> </p>

@@ -8,21 +8,12 @@
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <title>Batalla Naval</title>
      <link rel="stylesheet" href="./login.css">
-     <script src="../utils/cookies.js" defer></script>
      <script src="./login.js" defer></script>
-     <script src="../utils/storage.js" defer></script>
 </head>
 
 <body id="body">
-      <div class="header">
-    <div class="left"></div>
-    <div><h1>BATALLA NAVAL</h1></div>
-    <!-- <div class="right"> <button onclick="irARanking()" style="border: none; background: none;"> -->
-  <!-- <img src="../docs\iconos\star" title="Ranking" class="iconos"> -->
-</button></div>
-  </div>
+          <header><h1>BATALLA NAVAL</h1></header>
   <main>
-     <section class="logins">
           <div class="login-box">
      <div class="crown">👑</div>
      <div class="ingresoData" id="ingresoData">
@@ -34,12 +25,11 @@
      </form>
      <a href="./registrarse/register.html">¿No tenés cuenta? Registrate</a>
      <p id="info" class="info"></p>
+     
 
+     
 </div>
-
 </div>
-
-</section>
 </main>
 <footer>
 </footer>

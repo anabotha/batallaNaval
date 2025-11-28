@@ -17,9 +17,9 @@ if (!isset($_SESSION["user"])) {
 </head>
 <body>
   <header>
+       <h1> Configurar partida </h1>
 </header>
 <main>
-     <h1> Configurar partida </h1>
 
 <form method="POST" action="./configurarPartida.php">
 
