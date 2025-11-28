@@ -26,7 +26,6 @@ function colocarBarcosComputadora() {
         colocarBarcoCPU(barco);
     }
 
-    console.log("Barcos CPU colocados:", ocupadas_compu);
 
     sessionStorage.setItem("ocupadas_compu", JSON.stringify(ocupadas_compu));
 }

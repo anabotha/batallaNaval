@@ -26,7 +26,6 @@ function creaUsuario(usuarioJson) {
             let respuesta = JSON.parse(xhr.responseText);
             gestionarRespuestas(respuesta);
         }
-        console.log(xhr.responseText);
     };
 
     xhr.open("POST", "creaUsuario.php", true);

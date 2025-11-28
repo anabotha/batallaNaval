@@ -16,7 +16,6 @@ function buscaNombre(usuario, contraseña) {
 
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            console.log(xhr.responseText);
             let respuesta = JSON.parse(xhr.responseText);
             gestionarRtas(respuesta);
         }
@@ -45,7 +44,6 @@ function finLogueo(){
 }
 
 function gestionarRtas(rta){
-     console.log(rta);
      if(rta.existe && !rta.enUso){
           if(rta.contra){
                const p=document.getElementById("info");

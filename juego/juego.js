@@ -9,7 +9,6 @@ let impactosCPU = [];
 let impactosJugador = [];
 let objetivosCPU = []; // posiciones pendientes para hundir un barco
 let ultimoImpactoCPU = null; // para extender dirección
-
 let aciertosComputadora = [
   { nombre: "submarino", cantidad: 0 },
   { nombre: "destructor", cantidad: 0 },
@@ -25,6 +24,8 @@ let aciertos = [
 let intervaloReloj = null;
 let pista=false;
 let pistaComputadora=false;
+
+
 // event listener
 document.addEventListener("DOMContentLoaded", () => {
   const inicio = Date.now();
@@ -50,7 +51,6 @@ function calcularTotalBarcos() {
     total += tipo.cantidad;
   });
 
-  console.log("Total barcos:", total);
   return total;
 }
 
@@ -137,7 +137,6 @@ function jugadaComputadora() {
   if (impacto) {
     cell.innerText = "X";
     resultado.innerText = `La CPU impactó tu ${impacto.barco}`;
-    console.log("La CPU impactó en", fila, col);
     esTurnoJugador = false;
 
     impactosCPU.push({ fila, col, barco: impacto.barco, id: impacto.id });
@@ -159,7 +158,6 @@ function jugadaComputadora() {
      La CPU falló. ¡Agua!`
     ;
     cell.style.backgroundColor = "lightblue";
-    console.log("La CPU falló en", fila, col);
     ultimoImpactoCPU = null;
     esTurnoJugador = true;
   }
@@ -217,7 +215,6 @@ const ocupadas_compu = JSON.parse(sessionStorage.getItem("ocupadas_compu") || "[
     if (esTurnoJugador) resultadoDiv.innerText = " ¡Agua!";
 
     esTurnoJugador = false;
-    console.log("Fallaste en", e.target.id,esTurnoJugador);
   }
 };
 
@@ -271,7 +268,6 @@ function darPistaParaComputadora(){
   const celdasDisponibles = ocupadasJugador.filter(celda => !pistaValida(celda));
   
   if (celdasDisponibles.length === 0) {
-    console.log("Todas las celdas ya fueron impactadas");
     return null;
   }
   
@@ -339,8 +335,6 @@ function detenerReloj() {
 function calcularTiempo(){
   const inicio = Number(sessionStorage.getItem("inicioPartida"));
 const fin = Number(sessionStorage.getItem("finPartida"));
-console.log("inicio", inicio);
-console.log("fin", fin);
 const duracionMs = fin - inicio;
 const totalSegundos = Math.floor(duracionMs / 1000);
 const horas = Math.floor(totalSegundos / 3600);
@@ -408,7 +402,6 @@ const user=sessionStorage.getItem("user");
     tiempo: calcularTiempo(),
   };
 
-  console.log("infoPartida", infoPartida);
 
   fetch('./agregaPartida.php', {
     method: 'POST',
@@ -438,7 +431,6 @@ function ranking(){
             console.log(xhr.responseText);
                let respuesta = JSON.parse(xhr.responseText);
                
-               console.log("Ranking recibido:", respuesta);
             mostrarRanking(respuesta);
           }
      };

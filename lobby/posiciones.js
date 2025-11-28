@@ -1,4 +1,3 @@
-console.log("Flota cargada:", flota);
 sessionStorage.setItem("flota", JSON.stringify(flota));
 // VARIABLES GLOBALES
 // let ocupadas = new Set();
@@ -43,7 +42,6 @@ const posicionElegida = (e) => {
      // guardar posición del barco
      barco.posiciones.push({ fila, col });
 
-     console.log("Posición agregada a", barco.tipo, barco.posiciones,barco.color);
      
      const posicion=verificarPosicion(barco,fila,col);
      const noChoca=verificarChoque(barco,fila,col);
@@ -66,11 +64,9 @@ const posicionElegida = (e) => {
                <p>Ya esta ocupado ese lugar, volvelo a intentar.</p>
           `; 
      }
-     console.log(posicion,noChoca);
 };
 
 const ocuparCeldas = (barco,fila,col) => {
-     console.log("aa",col,fila);
     const tamaño = barco.tamaño;
     const orientacion = barco.orientacion;
 
@@ -101,7 +97,6 @@ if (!celda) {
     console.error(`ERROR: No existe la celda (${f},${c})`);
     return;
 }
-console.log(celda);
 celda.classList.add("ocupada");
 celda.style.background = `${barco.color}`;
 // celda.removeEventListener("onClick");
@@ -131,13 +126,10 @@ const verificarChoque = (barco, fila, col) => {
 
         let f =  parseInt(fila);
         let c =  parseInt(col);
-        console.log(barco);
         if (barco.orientacion == "horizontal") {
-            console.log("horizontal")
             c = col + i;
         } else {
             f = fila + i;
-            console.log("vertical")
         }
 
         // Usá otro nombre dentro del some
@@ -155,7 +147,6 @@ const siguienteBarco = () => {
     if (barcoActualIndex >= listaBarcos.length) {
         finalizarColocacion();
 colocarBarcosComputadora();
-console.log(ocupadas_compu);
         return;
     }
 
@@ -172,7 +163,6 @@ const finalizarColocacion = () => {
         <p>Puedes continuar al siguiente paso.</p>
     `;
 
-    console.log("Flota final con sus posiciones:", ocupadas);
     sessionStorage.removeItem("ocupadas");
     sessionStorage.setItem("ocupadas", JSON.stringify(ocupadas));
 
