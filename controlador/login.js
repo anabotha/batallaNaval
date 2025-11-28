@@ -2,7 +2,7 @@
 let jugador;
 
 window.onload = function () {
-     deleteAllCookies();
+     // deleteAllCookies();
      document.getElementById("inicio").addEventListener("click", function (e) {
           e.preventDefault(); 
           buscaNombre(document.getElementById("usuario").value,document.getElementById("password").value);
@@ -20,7 +20,7 @@ function buscaNombre(usuario, contraseña) {
             gestionarRtas(respuesta);
         }
     };
-     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+     // xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
     console.log(usuario,contraseña);
     let data = new FormData();
@@ -53,6 +53,7 @@ function gestionarRtas(rta){
                const p=document.getElementById("info");
                p.innerText="";
                setCookie("user",rta.nickname,1);
+               sessionStorage.setItem("user",rta.nickname);
                jugador=rta.nickname;
                finLogueo();
           }else{

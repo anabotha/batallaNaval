@@ -1,5 +1,6 @@
 
 //variables globales
+const totalBarcos=calcularTotalBarcos();
 let esTurnoJugador = true;
 let tirosComputadora = new Set(); // Para no repetir tiros
 let barcosHundidosCPU = new Set();
@@ -18,23 +19,18 @@ let aciertos = [
   { nombre: "acorazado", cantidad: 0 },
   { nombre: "portaviones", cantidad: 0 },
 ];
-let tiempoTranscurrido = 0;
 let intervaloReloj = null;
 let pista=false;
 let pistaComputadora=false;
-const ocupadas_compu = JSON.parse(sessionStorage.getItem("ocupadas_compu") || "[]");
-const totalBarcos=calcularTotalBarcos();
-console.log("totalBarcos",totalBarcos);
-console.log("cpu", ocupadas_compu);
 // event listener
 document.addEventListener("DOMContentLoaded", () => {
   const inicio = Date.now();
-  sessionStorage.setItem("inicioPartida", inicio);
-  reloj();
   const cells_en = document.querySelectorAll(".cell_enemigo");
   const ocupadas = JSON.parse(sessionStorage.getItem("ocupadas") || "[]");
-  console.log(ocupadas);
+  sessionStorage.setItem("inicioPartida", inicio);
   colorearCeldasOcupadas(ocupadas);
+  ranking();
+  reloj(); //inicia el reloj
   cells_en.forEach((cell) => {
     cell.addEventListener("click", posicionElegida);
   });
@@ -65,30 +61,29 @@ function colorearCeldasOcupadas(ocupadas) {
     }
   });
 }
-
 const posicionElegida = (e) => {
+
   evaluaJugada(e);
 
-  // finalizaJuego();
-  if(!finalizaJuego()){ 
-  if (!esTurnoJugador) {
-    jugadaComputadora();
+  if (!finalizaJuego()) { 
+    if (!esTurnoJugador) {
+      jugadaComputadora(); // <- AHORA SÍ SE EJECUTA
+    }
   }
 };
-}
+
 
 function jugadaComputadora() {
   // obtener tus barcos desde sessionStorage
-  let jugada={};
+  let jugada=null;
   if(pista && !pistaComputadora){
-    jugada=darPistaComputadora();
-    console.log("jugada",jugada);
+    jugada=darPistaParaComputadora(); // <- USA LA FUNCIÓN PARALELA PARA LA CPU
   }
   const ocupadasJugador = JSON.parse(
     sessionStorage.getItem("ocupadas") || "[]"
   );
   let fila, col, id;
-  if (pistaComputadora && jugada!={}){
+  if (pistaComputadora && jugada!=null){
     fila=jugada.fila;
     col=jugada.col;
     id = `cell-${fila}-${col}`;
@@ -120,9 +115,12 @@ const resultado = document.getElementById("resultado");
       barco: impacto.barco,
       id: impacto.id,
     });
-
+    console.log("La CPU impactó en", fila, col);
     evaluaBarco(impacto.barco, "computadora", impacto.id);
+    jugadaComputadora();
+    return;
   } else {
+    console.log("La CPU falló en", fila, col);
     // agua
     cell.style.backgroundColor = "lightblue";
 
@@ -145,7 +143,6 @@ function barcoHundido(tipo, atacante, id) {
   const celdasImpactadas = impactos.filter(
     (h) => h.barco === tipo && h.id === id
   );
-  console.log(impactos, celdasBarco, celdasImpactadas);
 
   return celdasImpactadas.length === celdasBarco.length;
 }
@@ -154,6 +151,7 @@ function barcoHundido(tipo, atacante, id) {
 const evaluaJugada = (e) => {
   const resultadoDiv = document.getElementById("resultado");
   const cell = document.getElementById(e.target.id);
+const ocupadas_compu = JSON.parse(sessionStorage.getItem("ocupadas_compu") || "[]");
 
   cell.removeEventListener("click", posicionElegida); // evitar re-click
 
@@ -173,11 +171,14 @@ const evaluaJugada = (e) => {
     cell.innerText = "X";
     cell.style.backgroundColor = "red";
     resultadoDiv.innerText = ` ¡Impactaste el ${resultado.barco} de la computadora!`;
+          esTurnoJugador = true;
+
     evaluaBarco(resultado.barco, "jugador", resultado.id);
   } else {
     cell.style.backgroundColor = "lightblue";
     resultadoDiv.innerText = " ¡Agua!";
     esTurnoJugador = false;
+    console.log("Fallaste en", e.target.id,esTurnoJugador);
   }
 };
 
@@ -186,18 +187,17 @@ const evaluaBarco = (tipo, jugador, id) => {
   const hundidos = document.getElementById("hundidos");
   const perdidos = document.getElementById("perdidos");
   if (jugador === "jugador") {
-    console.log(aciertos);
     if (
       barcoHundido(tipo, "jugador", id) &&
       !barcosHundidosJugador.has(tipo + "-" + id)
     ) {
-      console.log(tipo);
       barcosHundidosJugador.add(tipo + "-" + id);
       aciertos.find((b) => b.nombre === tipo).cantidad++;
 
-      console.log(" Hundiste", tipo, "#", id);
       resultadoDiv.innerText = ` 🎉 ¡Hundiste el ${tipo} de la computadora!`;
       hundidos.innerText = ` ${Array.from(barcosHundidosJugador).length}`;
+          esTurnoJugador =true;
+
     }
   } else {
     if (
@@ -208,48 +208,53 @@ const evaluaBarco = (tipo, jugador, id) => {
       aciertosComputadora.find((b) => b.nombre === tipo).cantidad++;
       perdidos.innerText = ` ${Array.from(barcosHundidosCPU).length}`;
       resultadoDiv.innerText = ` 💀 La CPU hundió tu ${tipo}!`;
+          esTurnoJugador = false;
+
     }
   }
 };
 
-function darPistaComputadora(){
-  pistaComputadora=true;
-  const ocupadasJugador = JSON.parse(sessionStorage.getItem("ocupadas") || "[]");
-  if(ocupadasJugador.length>0){
-    const randomIndex = Math.floor(Math.random() * ocupadasJugador.length);
-    const pistaBarco = ocupadasJugador[randomIndex];
-    if (!pistaValida(pistaBarco)){
-      darPistaComputadora(); //llamar recursivamente hasta encontrar una pista valida
-    }
-    console.log("pistaBarco",pistaBarco);
-    return {fila:pistaBarco.fila, col:pistaBarco.col};
-      }}
-
 function pistaValida(pistaBarco){
-  if (impactosJugador.some(impacto => impacto.fila === pistaBarco.fila && impacto.col === pistaBarco.col && pistaBarco.id===impacto.id)) {
-    console.log("pistaBarco",pistaBarco,false);
-        return false; // ya fue impactado
-    } else{
-      
-      return true;
-    }
+  // Devuelve true si YA fue impactada (para EXCLUIRLA); false si está disponible
+  const yaImpactada = impactosJugador.some(impacto => 
+    impacto.fila === pistaBarco.fila && impacto.col === pistaBarco.col
+  );
+  return yaImpactada; // true = ya impactada, false = disponible
 }
-//pedir pista
-function darPista(){
+
+// Función paralela para la CPU: sin recursión, usa filter directo
+function darPistaParaComputadora(){
+  const ocupadasJugador = JSON.parse(sessionStorage.getItem("ocupadas") || "[]");
+  
+  if (ocupadasJugador.length === 0) return null;
+  
+  // Filtrar celdas no impactadas aún
+  const celdasDisponibles = ocupadasJugador.filter(celda => !pistaValida(celda));
+  
+  if (celdasDisponibles.length === 0) {
+    console.log("Todas las celdas ya fueron impactadas");
+    return null;
+  }
+  
+  const randomIndex = Math.floor(Math.random() * celdasDisponibles.length);
+  const pistaBarco = celdasDisponibles[randomIndex];
+  
+  return { fila: pistaBarco.fila, col: pistaBarco.col };
+}
+//pedir pista (jugador) - con límite de intentos para evitar stack overflow
+function darPista(intentos = 0){
   pista=true;
   const ocupadas = JSON.parse(sessionStorage.getItem("ocupadas_compu") || "[]");
-  const pistaDiv= document.getElementById("pista");
   const btnPista= document.getElementById("pista_btn");
   btnPista.style.display="none"; //ocultar boton pista despues de usarlo
-  if(ocupadas.length>0){
+  
+  if(ocupadas.length>0 && intentos < 20){ // límite de 20 intentos
     const randomIndex = Math.floor(Math.random() * ocupadas.length);
     const pistaBarco = ocupadas[randomIndex];
-    if (!pistaValida(pistaBarco)){
-      darPista(); //llamar recursivamente hasta encontrar una pista valida
-    }else{
-      // pistaDiv.innerHTML=` <h2>Pista:</h2>
-        // <p>El ${pistaBarco.barco} está en la fila ${(pistaBarco.fila + 1)}, columna ${(pistaBarco.col + 1)}.</p>
-      // `;
+    if (pistaValida(pistaBarco)){ // si ya fue impactada
+      darPista(intentos + 1); //llamar recursivamente hasta encontrar una pista valida
+      return;
+    } else { // celda no impactada aún = válida para pista
       let celda=document.getElementById("cell-en-" + pistaBarco.fila + "-" + pistaBarco.col );
       celda.style.backgroundColor = "yellow";
       setTimeout(() => {
@@ -257,17 +262,15 @@ function darPista(){
         celda.style.backgroundColor = "white";}
       }, 15000);
     }
-    }
-    
-  
-
+    esTurnoJugador = false; // IMPORTANTE: cierra el turno del jugador
+  }
 }
-//guardar cambios
+
 //abandonar partida
 function abandonarPartida() {
   let confirmar = confirm("¿Estás seguro de que deseas abandonar la partida?");
   if (confirmar) {
-      alert("Has abandonado la partida. La CPU será declarada ganadora.");
+      alert("Has abandonado la partida. Esta partida no se guardará.");
   }
   detenerReloj();
   irLobby();
@@ -277,7 +280,7 @@ function abandonarPartida() {
 
 
 function reloj() {
-  tiempoTranscurrido = 0;
+  let tiempoTranscurrido = 0;
 
   intervaloReloj = setInterval(() => {
     tiempoTranscurrido++;
@@ -287,7 +290,6 @@ function reloj() {
 
     const tiempoFormateado = 
       `${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
-
     document.getElementById('tiempo').textContent = tiempoFormateado;
   }, 1000);
 }
@@ -299,15 +301,19 @@ function detenerReloj() {
 function calcularTiempo(){
   const inicio = Number(sessionStorage.getItem("inicioPartida"));
 const fin = Number(sessionStorage.getItem("finPartida"));
-
+console.log("inicio", inicio);
+console.log("fin", fin);
 const duracionMs = fin - inicio;
+const totalSegundos = Math.floor(duracionMs / 1000);
+const horas = Math.floor(totalSegundos / 3600);
+const minutos = Math.floor((totalSegundos % 3600) / 60);
+const segundos = totalSegundos % 60;
 
-const duracionSeg = Math.floor(duracionMs / 1000);
-return duracionSeg;
+return `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
+
 }
 //evalua si finaliza el juego. 
 function finalizaJuego() {
-
     let jugadorGana = false;
     let cpuGana = false;
     let cantBarcos=0;
@@ -315,12 +321,10 @@ function finalizaJuego() {
   
     aciertos.forEach(tipo => {
         cantBarcos+=tipo.cantidad
-        console.log("tipo",tipo.nombre,tipo.cantidad);
         if (cantBarcos<totalBarcos){
           fin=false;
         }else{
           fin=true;
-          console.log("fin");
           jugadorGana = true;
         }
     });
@@ -340,7 +344,7 @@ function finalizaJuego() {
         sessionStorage.setItem("finPartida", fin);
         detenerReloj();
         agregaPartidaBd("jugador");
-        // irFinalizar();
+        irFinalizar();
         
         return true;    }
 
@@ -350,40 +354,75 @@ function finalizaJuego() {
         sessionStorage.setItem("finPartida", fin);
         detenerReloj();
         agregaPartidaBd("computadora");
-        // irFinalizar();
+        irFinalizar();
         return true;
     }
-    // irFinalizar();
     return false;
 }
-function agregaPartidaBd(ganador) {
-     
-  if (ganador==="jugador"){
-    ganoJugador=true;
-    ganoComputadora=false;
-  }else {
-    ganoJugador=false;
-    ganoComputadora=true;
-  }
 
-  let infoPartida={
-      usuario: sessionStorage.getItem("user") , // no anda el user
-      ganoJugador: ganoJugador,
-      ganoComputadora: ganoComputadora,
-      tiempo: calcularTiempo(),
-  }
-  console.log("infoPartida",infoPartida);
-     let xhr = new XMLHttpRequest();
+//guarda la partida
+function agregaPartidaBd(ganador) {
+  // const user = getCookie("user");
+const user=sessionStorage.getItem("user");
+  const infoPartida = {
+    usuario: user,
+    ganoJugador: ganador === "jugador" ? 1 : 0,
+    ganoComputadora: ganador !== "jugador" ? 1 : 0,
+    tiempo: calcularTiempo(),
+  };
+
+  console.log("infoPartida", infoPartida);
+
+  fetch('../controlador/agregaPartida.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(infoPartida)
+  })
+  .then(res => {
+    console.log('status', res.status);
+    return res.text();
+  })
+  .then(text => {
+    console.log('agregaPartidas response:', text);
+    try { const json = JSON.parse(text); console.log('respuesta json', json); } catch(e){/* no JSON */ }
+  })
+  .catch(err => {
+    console.error('Error enviando partida:', err);
+  });
+}
+
+//Ranking
+function ranking(){
+    const nombreUsuario = sessionStorage.getItem("user") || "";
+      let xhr = new XMLHttpRequest();
      xhr.onreadystatechange = function () {
           if (xhr.readyState === 4 && xhr.status === 200) {
 
+            console.log(xhr.responseText);
                let respuesta = JSON.parse(xhr.responseText);
-              //  irAResults();
+               
+               console.log("Ranking recibido:", respuesta);
+            mostrarRanking(respuesta);
           }
      };
-     xhr.open("GET", "agregaPartidas.php?resultado=" + encodeURIComponent(JSON.stringify(infoPartida)), true);
+     xhr.open("GET", "../juego/top3.php?usuario=" + encodeURIComponent(nombreUsuario), true);
+     xhr.send();
+  
+}
 
-     xhr.send();//no anda
+function mostrarRanking(data){
+let p=document.getElementById("ranking_list");
+if(data.length === 0) {
+  p.innerText = "No hay partidas jugadas aún.";
+}else{
+  data.forEach((usuario, index) => {
+      let linea=document.createElement("p");
+      linea.innerText=`
+      ${index + 1}. Duracion partida: ${usuario.duracion_partida}
+                   Fecha: ${usuario.fecha_partida}`;
+      p.appendChild(linea);
+  });
+}
 }
 
 //dirigir

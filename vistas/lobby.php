@@ -4,7 +4,7 @@ include "../controlador/ultimaPartida.php";
 
 // Supongamos que el nick lo tenés en sesión
 session_start();
-$nick = $_COOKIE["user"] ?? null;
+$nick = $_COOKIE["user"] ?? null || $_SESSION["user"] ?? null;
 
 $ultima = null;
 if ($nick) {
@@ -38,7 +38,7 @@ if ($nick) {
     </section>
         <section>
         <p><strong>Resultado: </strong> </p>
-        <?php if( $ultima["resultado"] == 'User'): ?>
+        <?php if( $ultima["resultado"] == 'User' || $ultima["resultado"] == 'user'): ?>
             <p> ¡Felicidades, has ganado la última partida!</p>
         <?php elseif ( $ultima["resultado"] == 'Computadora' ) : ?>
             <p> La computadora ganó la última partida. ¡Mejor suerte la próxima vez!</p>

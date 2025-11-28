@@ -1,3 +1,43 @@
+
+.tablero_chico {
+    display: grid;
+    grid-template-columns: repeat(10, 30px);
+    grid-template-rows: repeat(10, 30px);
+    gap: 0;
+    margin-top: 20px;
+}
+.tablero_mediano {
+    display: grid;
+    grid-template-columns: repeat(15, 30px);
+    grid-template-rows: repeat(10, 30px);
+    gap: 0;
+    margin-top: 20px;
+}
+.tablero_grande {
+    display: grid;
+    grid-template-columns: repeat(10, 30px);
+    grid-template-rows: repeat(20, 30px);
+    gap: 0;
+    margin-top: 20px;
+}
+.tablero_enorme {
+    display: grid;
+    grid-template-columns: repeat(15, 30px);
+    grid-template-rows: repeat(15, 30px);
+    gap: 0;
+    margin-top: 20px;
+}
+
+.contenedor_tableros {
+    display: flex;
+    flex-direction: row;
+    gap: 70px; /* Espacio entre los dos tableros */
+}
+.ocupada {
+    outline: 2px solid black;
+    opacity: 0.8; 
+}
+
 .indicaciones{
 display: flex;
 justify-content: center;
@@ -5,9 +45,191 @@ align-items: center;
      margin-top: 0px;
      flex-direction: column;
 }
-.estadisticas{
-     display: flex;
-     justify-content: space-around;
-     margin-top: 10px;
-     flex-direction: row;
+
+ /* ------------ GENERAL ------------- */
+ /* === CONTENEDOR DE 3 COLUMNAS === */
+.layout_3col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; /* tres columnas */
+    gap: 25px;
+    width: 95%;
+    margin: 0 auto;
+    margin-top: 20px;
+}
+
+/* altura mínima para que las columnas queden equilibradas */
+.instrucciones, 
+.info_juego, 
+#ranking {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    /* min-height: 100vh; */
+    /* padding-top: 20px; */
+    background: #f3f6fb;
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+
+/* ------------ TITULOS ------------- */
+h2, h3 {
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+ul {
+    margin-top: 5px;
+}
+
+/* ------------ INSTRUCCIONES ------------- */
+.instrucciones {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    margin-bottom: 20px;
+}
+
+.reloj {
+    /* margin-top: 10px; */
+    /* padding: 10px; */
+    background: #e9eff7;
+    border-radius: 8px;
+    width: 100%;
+    text-align: center;
+}
+
+#tiempo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+/* ------------ BOTONES ------------- */
+button {
+    border: none;
+    padding: 10px 15px;
+    margin-top: 10px;
+    border-radius: 6px;
+    background: #3498db;
+    color: rgb(221, 214, 214);
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: #043f66;
+}
+
+#pista_btn {
+    background: #2ecc71;
+}
+
+#pista_btn:hover {
+    background: #29b765;
+}
+
+#finalizar_btn {
+    background: #e74c3c;
+}
+
+#finalizar_btn:hover {
+    background: #d63e2f;
+}
+
+/* ------------ ESTADISTICAS ------------- */
+.estadisticas {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+    width: 100%;
+    font-size: 15px;
+    background: #fafafa;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.estadisticas span {
+    font-weight: bold;
+    color: #000;
+}
+
+/* ------------ TABLEROS ------------- */
+.contenedor_tableros {
+    display: flex;
+    flex-direction: row;
+    gap: 60px;
+    margin-top: 20px;
+}
+
+.cell, .cell_enemigo {
+    border: 1px solid #444;
+    transition: 0.1s ease;
+}
+
+.cell_enemigo:hover {
+    background-color: #131313;
+}
+
+
+/* ------------ INDICACIONES ------------- */
+.indicaciones {
+    margin-top: 15px;
+    padding: 10px;
+    background: #eef3ff;
+    border: 1px solid #ccd8ff;
+    border-radius: 8px;
+}
+
+#mensaje_resultado {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+/* ------------ RANKING ------------- */
+#ranking {
+    margin-top: 15px;
+    width: 90%;
+    max-width: 600px;
+    padding: 15px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+#ranking_list {
+    margin-top: 10px;
+    font-size: 15px;
+}
+
+
+.botones_juego {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+    justify-content: center;
+}
+.separador{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 400px;
+}
+
+.info_juego{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 20px;
 }

@@ -97,15 +97,20 @@ $jsonTablero = json_encode(["row" => $row, "col" => $col]);
 
 </head>
 <body>
+     <header>
+          <h1>Coloca tus embarcaciones</h1>
+     </header>
+     <main>
      <div class="instrucciones">
-          <h2>Instrucciones para colocar las embarcaciones:</h2>
+          
           <ul>
                <li>Haga clic en una celda del tablero para seleccionar la posición inicial de la embarcación.</li>
                <li>Repita el proceso hasta que todas las embarcaciones estén colocadas.</li>
           </ul>
+          
           <div id="indicaciones">
-
                </div>  
+          
           </div>  
      <div class="contenedor_tableros"> 
 
@@ -119,7 +124,18 @@ $jsonTablero = json_encode(["row" => $row, "col" => $col]);
                          <?php endfor; ?>
                <?php endfor; ?>
           </div>
-         <button id="confirmarPosiciones" onClick="confirmarPosiciones()">Confirmar Posiciones</button>
+          <div>
+               <h3>Recuerda</h3>
+          <h4>Submarinos: 1 celda</h4>
+          <h4>Destructores: 2 celdas</h4>
+          <h4>Acorazados: 3 celdas</h4>
+          <h4>Portaviones: 4 celdas</h4>
+          <button id="confirmarPosiciones" onClick="confirmarPosiciones()">Confirmar Posiciones</button>
      </div>
+     </div>
+
+                    </main>
+                    <footer>
+                    </footer>
 </body>
 </html>
