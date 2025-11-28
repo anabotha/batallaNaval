@@ -1,5 +1,9 @@
 <?php
 session_start();
+if (!isset($_SESSION["user"])) {
+    header("Location: login.php");
+    exit;
+}
 
 $config = $_SESSION['config_juego'] ?? null;
 
@@ -90,7 +94,7 @@ $jsonTablero=json_encode([
 
      <script> const flota = <?php echo $jsonFlota; ?>;</script>
      <script>const tablero = <?php echo $jsonTablero; ?>;</script>
-     <script src="../controlador/juego.js" defer></script>
+     <script src="./juego.js" defer></script>
 </head>
 <body>
      <header>

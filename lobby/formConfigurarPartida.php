@@ -1,5 +1,10 @@
      <?php
 session_start();
+if (!isset($_SESSION["user"])) {
+    header("Location: login.php");
+    exit;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -7,9 +12,8 @@ session_start();
 <head>
      <meta charset="UTF-8">
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>Document</title>
      <link rel="stylesheet" href="./config.css">
-     <script src="../controlador/configurarPartida.js" defer></script>
+     <script src="./configurarPartida.js" defer></script>
 </head>
 <body>
   <header>
@@ -17,7 +21,7 @@ session_start();
 <main>
      <h1> Configurar partida </h1>
 
-<form method="POST" action="../controlador/configurarPartida.php">
+<form method="POST" action="./configurarPartida.php">
 
       <div class="div-form">
      <label for="tablero"> Tamaño de tablero </label>

@@ -1,14 +1,15 @@
 <?php
-// Incluimos el archivo con la función
-include "../controlador/ultimaPartida.php";
-
-// Supongamos que el nick lo tenés en sesión
+include "./ultimaPartida.php";
 session_start();
-$nick = $_COOKIE["user"] ?? null || $_SESSION["user"] ?? null;
+if (!isset($_SESSION["user"])) {
+    header("Location: loginView.php");
+    exit;
+}
+
+$nick = $_SESSION["user"] ?? null;
 
 $ultima = null;
 if ($nick) {
-    // Llamamos a la función que retorna fecha y resultado
     $ultima = getUltimaPartida($nick);
 }
 
@@ -18,10 +19,8 @@ if ($nick) {
 <head>
      <meta charset="UTF-8">
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>Memory Game</title>
+     <title>Batalla Naval</title>
      <link rel="stylesheet" href="./lobby.css">
-         <script src="../utils/cookies.js" defer></script>
-    <script src="../utils/storage.js" defer></script>
 </head>
 
 <body id="body">
@@ -51,8 +50,7 @@ if ($nick) {
 </section>
 </div>
 <hr>
-    <!-- BOTÓN para configurar nueva partida -->
-    <form id="formUltimaPartida" method="post" action="../vistas/formConfigurarPartida.php">
+    <form id="formUltimaPartida" method="post" action="./formConfigurarPartida.php">
         <input type="hidden" name="nick" value="<?= $nick ?>">
         <button type="submit">Configurar partida</button>
     </form>

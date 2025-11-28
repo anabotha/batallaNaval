@@ -56,7 +56,7 @@ $_SESSION['config_juego'] = $config;
 
 
 // Redirigir directamente a la vista
-header("Location: ../vistas/formPosiciones.php"); //redirige al form de posiciones
+header("Location: ./formPosiciones.php"); //redirige al form de posiciones
 exit;
 
 }

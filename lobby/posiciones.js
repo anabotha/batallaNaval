@@ -188,7 +188,7 @@ const sacarListeners=()=>{
 }
 const confirmarPosiciones=()=>{
     if( fin ) {
-        window.location.href = "../vistas/juego.php";
+        window.location.href = "../juego/juego.php";
         exit;
     } 
 }

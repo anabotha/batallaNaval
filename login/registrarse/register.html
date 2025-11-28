@@ -3,8 +3,8 @@
 <head>
      <meta charset="UTF-8">
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>Memory Game</title>
-     <script src="register.js" defer></script>
+     <title>batalla naval</title>
+     <script src="./register.js" defer></script>
           <link rel="stylesheet" href="./register.css">
 
 
@@ -15,16 +15,16 @@
      <div class="emoji">📝</div>
      <h2>REGISTRATE</h2>
      <p>¡Unite a la partida!</p>
-     <form id="form" action="register.php" method="post">
+     <form id="form" action="register.html" method="post">
           <label for="usuario">Nombre de usuario</label>
           <input id="usuario" type="text" name="usuario" minlength="5" maxlength="15" placeholder="ej: ana18" required>
           <label for="password">Contraseña</label>
-          <input id="password" type="password" minlength="5" maxlength="15" name="password" placeholder="ej:12345" required>
+          <input id="password" type="password" minlength="6" maxlength="15" name="password" placeholder="ej:12345" required>
           <label for="email">Email</label>
           <input id="email" type="email" name="email" placeholder="usuario@gmail.com" required>
           <button id="registreUsuario" type="submit">REGISTRARME ✅</button>
      </form>
-     <a href="../login.php">¿Ya tenés cuenta? Iniciá sesión</a>
+     <a href="../loginView.php">¿Ya tenés cuenta? Iniciá sesión</a>
 </div>
 <p id="info" class="info"></p>
 <p id="exito" class="exito"></p> 

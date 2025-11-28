@@ -1,6 +1,9 @@
 <?php
 session_start();
-
+if (!isset($_SESSION["user"])) {
+    header("Location: login.php");
+    exit;
+}
 $config = $_SESSION['config_juego'] ?? null;
 
 if (!$config) {
@@ -92,8 +95,8 @@ $jsonTablero = json_encode(["row" => $row, "col" => $col]);
 <script>
     const tablero = <?php echo $jsonTablero; ?>;
 </script>
-     <script src="../controlador/posiciones.js" defer></script>
-     <script src="../controlador/posiciones_cpu.js" defer></script>
+     <script src="./posiciones.js" defer></script>
+     <script src="./posiciones_cpu.js" defer></script>
 
 </head>
 <body>

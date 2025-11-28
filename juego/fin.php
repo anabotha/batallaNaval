@@ -1,3 +1,11 @@
+<?php
+session_start();
+if (!isset($_SESSION["user"])) {
+    header("Location: login.php");
+    exit;
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -39,7 +47,7 @@
           echo "</table>";
      }
      ?>
-     <button onclick="window.location.href='../vistas/lobby.php'">Volver a jugar</button>
-     <button onclick="window.location.href='../vistas/loginView.php'">Salir</button>
+     <button onclick="window.location.href='../lobby/lobby.php'">Volver a jugar</button>
+     <button onclick="window.location.href='../login/loginView.php'">Salir</button>
 </body>
 </html>

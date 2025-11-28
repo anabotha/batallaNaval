@@ -373,7 +373,7 @@ const user=sessionStorage.getItem("user");
 
   console.log("infoPartida", infoPartida);
 
-  fetch('../controlador/agregaPartida.php', {
+  fetch('./agregaPartida.php', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(infoPartida)
@@ -427,7 +427,7 @@ if(data.length === 0) {
 
 //dirigir
 function irLobby(){
-  window.location.href = "lobby.php";
+  window.location.href = "../lobby/lobby.php";
 }
 function irFinalizar() {
     window.location.href = "fin.php";
