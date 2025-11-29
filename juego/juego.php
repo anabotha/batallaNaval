@@ -5,53 +5,19 @@ if (!isset($_SESSION["user"])) {
     exit;
 }
 
-$config = $_SESSION['config_juego'] ?? null;
+//barcos
+require_once "../utils/dataBarcos.php";  
 
-if (!$config) {
-    die("No hay configuración cargada.");
+try {
+    $flota = getDataBarcos();
+//     $jsonFlota = json_encode($flota);
+} catch (Exception $e) {
+    die($e->getMessage());
 }
 
 
-// Barcos
-$ac_cant   = $config['acorazados']['cantidad'];
-$ac_pos    = $config['acorazados']['posicion'];
-$ac_color  = $config['acorazados']['color'];
-
-$des_cant  = $config['destructores']['cantidad'];
-$des_pos   = $config['destructores']['posicion'];
-$des_color = $config['destructores']['color'];
-
-$sub_cant  = $config['submarinos']['cantidad'];
-$sub_pos   = $config['submarinos']['posicion'];
-$sub_color = $config['submarinos']['color'];
-
-$porta_pos   = $config['portaviones']['posicion'];
-$porta_color = $config['portaviones']['color'];
-
-$jsonFlota=json_encode([
-     'acorazados' => [
-          'cantidad' => $ac_cant,
-          'posicion' => $ac_pos,
-          'color'    => $ac_color
-     ],
-     'destructores' => [
-          'cantidad' => $des_cant,
-          'posicion' => $des_pos,
-          'color'    => $des_color
-     ],
-     'submarinos' => [
-          'cantidad' => $sub_cant,
-          'posicion' => $sub_pos,
-          'color'    => $sub_color
-     ],
-     'portaviones' => [
-          'posicion' => $porta_pos,
-          'color'    => $porta_color
-     ]
-]);
-
 //tablero
-require_once "../utils/gameConfig.php";
+require_once "../utils/tablero.php";
 
 list($row, $col, $tab) = getGameConfig();
 $jsonTablero = json_encode(["row" => $row, "col" => $col]);
@@ -65,9 +31,10 @@ $jsonTablero = json_encode(["row" => $row, "col" => $col]);
      <title>Batalla naval</title>
      <link rel="stylesheet" href="./juego.css">
 
-     <script> const flota = <?php echo $jsonFlota; ?>;</script>
+     <!-- <script> const flota = <?php echo $jsonFlota; ?>;</script> -->
      <script>const tablero = <?php echo $jsonTablero; ?>;</script>
      <script src="./juego.js" defer></script>
+     <script src="../utils/reloj.js" defer></script>
 </head>
 <body>
      <header>

@@ -1,6 +1,5 @@
 
 //variables globales
-const totalBarcos=calcularTotalBarcos();
 let esTurnoJugador = true;
 let tirosComputadora = new Set(); // Para no repetir tiros
 let barcosHundidosCPU = new Set();
@@ -24,18 +23,19 @@ let aciertos = [
 let intervaloReloj = null;
 let pista=false;
 let pistaComputadora=false;
-  const ocupadas_compu = JSON.parse(sessionStorage.getItem("ocupadas_compu") || "[]");
+const totalBarcos=calcularTotalBarcos();
+
 
 
 // event listener
 document.addEventListener("DOMContentLoaded", () => {
+
   const inicio = Date.now();
   const cells_en = document.querySelectorAll(".cell_enemigo");
   const ocupadas = JSON.parse(sessionStorage.getItem("ocupadas") || "[]");
   sessionStorage.setItem("inicioPartida", inicio);
   colorearCeldasOcupadas(ocupadas);
   ranking();
-  reloj(); //inicia el reloj
   cells_en.forEach((cell) => {
     cell.addEventListener("click", posicionElegida);
   });
@@ -55,6 +55,10 @@ function calcularTotalBarcos() {
   return total;
 }
 
+function getOcupadasCPU() {
+    return JSON.parse(sessionStorage.getItem("ocupadas_compu") || "[]");
+}
+
 //busque las posiciones de los barcos.
 function colorearCeldasOcupadas(ocupadas) {
   ocupadas.forEach(({ fila, col, color }) => {
@@ -66,10 +70,10 @@ function colorearCeldasOcupadas(ocupadas) {
   });
 }
 const posicionElegida = (e) => {
-
+  
   evaluaJugada(e);
-
   if (!finalizaJuego()) { 
+
     if (!esTurnoJugador) {
       jugadaComputadora(); // <- AHORA SÍ SE EJECUTA
     }
@@ -103,7 +107,6 @@ function jugadaComputadora() {
 
   let fila, col, id;
 
-  // 1) Si hay objetivos, atacarlos primero
   if (objetivosCPU.length > 0) {
     const objetivo = objetivosCPU.shift();
     fila = objetivo.fila;
@@ -119,7 +122,6 @@ function jugadaComputadora() {
     }
   }
 
-  // 2) Si no hay estrategia, elegir aleatorio
   if (!id) {
     do {
       fila = Math.floor(Math.random() * tablero.row);
@@ -166,23 +168,18 @@ function jugadaComputadora() {
 
 
 function barcoHundido(tipo, atacante, id) {
-  const posiciones =
-    atacante === "jugador"
-      ?ocupadas_compu || "[]"
-      : JSON.parse(sessionStorage.getItem("ocupadas") || "[]");
+  const posiciones = (atacante === "jugador")
+        ? JSON.parse(sessionStorage.getItem("ocupadas_compu") || "[]")
+        : JSON.parse(sessionStorage.getItem("ocupadas") || "[]");
 
-  // celdas del barco exacto
-  const celdasBarco = posiciones.filter((c) => c.barco === tipo && c.id === id);
-
-  // Ver impactos (celda hundida)
   const impactos = atacante === "jugador" ? impactosJugador : impactosCPU;
 
-  const celdasImpactadas = impactos.filter(
-    (h) => h.barco === tipo && h.id === id
-  );
+  const total = posiciones.filter(p => p.barco === tipo && p.id === id).length;
+  const hits = impactos.filter(i => i.barco === tipo && i.id === id).length;
 
-  return celdasImpactadas.length === celdasBarco.length;
+  return hits === total;
 }
+
 
 // contar aciertos por barco
 const evaluaJugada = (e) => {
@@ -190,8 +187,8 @@ const evaluaJugada = (e) => {
   const cell = document.getElementById(e.target.id);
 
   cell.removeEventListener("click", posicionElegida); 
-
-  const resultado = ocupadas_compu.find((b) => {
+  
+  const resultado = getOcupadasCPU().find((b) => {
     const id = `cell-en-${b.fila}-${b.col}`;
     return cell.id === id;
   });
@@ -219,6 +216,7 @@ const evaluaJugada = (e) => {
 };
 
 const evaluaBarco = (tipo, jugador, id) => {
+  console.log(tipo, jugador, id);
   const resultadoDiv = document.getElementById("resultado");
   const hundidos = document.getElementById("hundidos");
   const perdidos = document.getElementById("perdidos");
@@ -278,7 +276,7 @@ function darPistaParaComputadora(){
 }
 function darPista(intentos = 0){
   pista=true;
-  const ocupadas = ocupadas_compu || "[]";
+  const ocupadas = JSON.parse(sessionStorage.getItem("ocupadas_compu") || "[]");
   const btnPista= document.getElementById("pista_btn");
   btnPista.style.display="none"; //ocultar boton pista despues de usarlo
   
@@ -313,24 +311,7 @@ function abandonarPartida() {
 //tiempo
 
 
-function reloj() {
-  let tiempoTranscurrido = 0;
 
-  intervaloReloj = setInterval(() => {
-    tiempoTranscurrido++;
-
-    const minutos = Math.floor(tiempoTranscurrido / 60);
-    const segundos = tiempoTranscurrido % 60;
-
-    const tiempoFormateado = 
-      `${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
-    document.getElementById('tiempo').textContent = tiempoFormateado;
-  }, 1000);
-}
-
-function detenerReloj() {
-  clearInterval(intervaloReloj);
-}
 
 function calcularTiempo(){
   const inicio = Number(sessionStorage.getItem("inicioPartida"));
@@ -345,51 +326,31 @@ return `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0
 
 }
 //evalua si finaliza el juego. 
+
 function finalizaJuego() {
-    let jugadorGana = false;
-    let cpuGana = false;
-    let cantBarcos=0;
-    let fin= false;
-  
-    aciertos.forEach(tipo => {
-        cantBarcos+=tipo.cantidad
-        if (cantBarcos<totalBarcos){
-          fin=false;
-        }else{
-          fin=true;
-          jugadorGana = true;
-        }
-    });
-    aciertosComputadora.forEach(tipo => {
-      if (cantBarcos<totalBarcos){
-          fin=false;
-        }else{
-          fin=true;
-            cpuGana = true;
-        }
-      }
-    );
+    const jugador = aciertos.reduce((s, b) => s + b.cantidad, 0);
+    const cpu = aciertosComputadora.reduce((s, b) => s + b.cantidad, 0);
 
-    if (jugadorGana) {
-        alert("🎉 ¡GANASTE! Hundiste toda la flota enemiga.");
-        const fin = Date.now();
-        sessionStorage.setItem("finPartida", fin);
-        detenerReloj();
-        agregaPartidaBd("jugador");
-        irFinalizar();
-        
-        return true;    }
-
-    if (cpuGana) {
-        alert("💀 PERDISTE. La CPU hundió toda tu flota.");
-        const fin = Date.now();
-        sessionStorage.setItem("finPartida", fin);
-        detenerReloj();
-        agregaPartidaBd("computadora");
-        irFinalizar();
+    if (jugador === totalBarcos) {
+        finalizar("jugador");
+        return true;
+    }
+    if (cpu === totalBarcos) {
+        finalizar("computadora");
         return true;
     }
     return false;
+}
+
+function finalizar(ganador) {
+    const fin = Date.now();
+    sessionStorage.setItem("finPartida", fin);
+    detenerReloj();
+    agregaPartidaBd(ganador);
+    irFinalizar();
+    alert(ganador === "jugador" 
+          ? "🎉 ¡GANASTE! Hundiste toda la flota enemiga" 
+          : "💀 ¡PERDISTE! La CPU hundió toda tu flota");
 }
 
 //guarda la partida
