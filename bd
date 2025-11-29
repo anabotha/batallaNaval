@@ -1,11 +1,11 @@
 -- =========================================================
 -- CREACIÓN DE BASE DE DATOS
 -- =========================================================
-CREATE DATABASE IF NOT EXISTS juegodb
+CREATE DATABASE IF NOT EXISTS batallanaval
     DEFAULT CHARACTER SET utf8mb4
     COLLATE utf8mb4_general_ci;
 
-USE juegodb;
+USE batallanaval;
 
 -- =========================================================
 -- 1) TABLA USUARIOS

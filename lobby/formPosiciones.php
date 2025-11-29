@@ -10,74 +10,16 @@ if (!$config) {
     die("No hay configuración cargada.");
 }
 
-// Tamaño del tablero
-$tablero = $config['tablero']; 
+//tablero
+require_once "../utils/tablero.php";
 
-// Barcos
-require_once __DIR__ . "/Barco.class.php";
-
-
-$acorazado = new Barco(
-    color: $config['acorazados']['color'],
-    cantidad: $config['acorazados']['cantidad'],
-    orientacion: $config['acorazados']['posicion'] ?? 'Horizontal', 
-     tamaño: 3
-);
-
-$destructor = new Barco(
-    color: $config['destructores']['color'],
-    cantidad: $config['destructores']['cantidad'],
-    orientacion: $config['destructores']['posicion'] ?? 'Horizontal',
-     tamaño: 2
-);
-
-$submarino = new Barco(
-    color: $config['submarinos']['color'],
-    cantidad: $config['submarinos']['cantidad'],
-    orientacion: $config['submarinos']['posicion'] ?? 'Horizontal',
-     tamaño: 1
-);
-
-$portaviones = new Barco(
-    color: $config['portaviones']['color'],
-    cantidad: 1, // normalmente 1 portaviones
-    orientacion: $config['portaviones']['posicion'] ?? 'Horizontal',
-     tamaño: 4
-);
-$flota = [
-    'acorazado'   => $acorazado,
-    'destructor'  => $destructor,
-    'submarino'   => $submarino,
-    'portaviones' => $portaviones
-];
-
-$jsonFlota = json_encode($flota);
-switch ($tablero) {
-     case '100':
-          $row=10;
-          $col=10;
-          $tab="chico";
-     break;
-     case '150':
-          $row=10;
-          $col=15;
-          $tab="mediano";
-     break;
-     case '200':
-          $row=20;
-          $col=10;
-          $tab="grande";
-     break; 
-     case '225':
-          $row=15;
-          $col=15;
-          $tab="enorme";
-     break;
-     default:
-          # code...
-          break;
-}
+list($row, $col, $tab) = getGameConfig();
 $jsonTablero = json_encode(["row" => $row, "col" => $col]);
+
+require_once "../utils/dataBarcos.php";
+$flota = getDataBarcos();
+$jsonFlota = json_encode($flota);
+
 
 
 ?>
@@ -87,7 +29,7 @@ $jsonTablero = json_encode(["row" => $row, "col" => $col]);
 <head>
      <meta charset="UTF-8">
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>Document</title>
+     <title>Batalla Naval</title>
      <link rel="stylesheet" href="./posiciones.css">
      <script>
     const flota = <?php echo $jsonFlota; ?>;
@@ -121,7 +63,6 @@ $jsonTablero = json_encode(["row" => $row, "col" => $col]);
           <div class="tablero_<?php echo $tab; ?>" id="tablero">
                <?php for ($i = 0; $i < $row; $i++): ?>
                     <?php for ($j = 0; $j < $col; $j++): ?>
-                         <!-- <div class="cell" id="<?php echo 'cell-' . $i . '-' . $j; ?>"></div> -->
                     <div class="cell" data-row="<?= $i ?>" data-col="<?= $j ?>"></div>
 
                          <?php endfor; ?>

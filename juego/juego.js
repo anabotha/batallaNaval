@@ -24,6 +24,7 @@ let aciertos = [
 let intervaloReloj = null;
 let pista=false;
 let pistaComputadora=false;
+  const ocupadas_compu = JSON.parse(sessionStorage.getItem("ocupadas_compu") || "[]");
 
 
 // event listener
@@ -167,7 +168,7 @@ function jugadaComputadora() {
 function barcoHundido(tipo, atacante, id) {
   const posiciones =
     atacante === "jugador"
-      ? JSON.parse(sessionStorage.getItem("ocupadas_compu") || "[]")
+      ?ocupadas_compu || "[]"
       : JSON.parse(sessionStorage.getItem("ocupadas") || "[]");
 
   // celdas del barco exacto
@@ -187,9 +188,8 @@ function barcoHundido(tipo, atacante, id) {
 const evaluaJugada = (e) => {
   const resultadoDiv = document.getElementById("resultado");
   const cell = document.getElementById(e.target.id);
-const ocupadas_compu = JSON.parse(sessionStorage.getItem("ocupadas_compu") || "[]");
 
-  cell.removeEventListener("click", posicionElegida); // evitar re-click
+  cell.removeEventListener("click", posicionElegida); 
 
   const resultado = ocupadas_compu.find((b) => {
     const id = `cell-en-${b.fila}-${b.col}`;
@@ -278,7 +278,7 @@ function darPistaParaComputadora(){
 }
 function darPista(intentos = 0){
   pista=true;
-  const ocupadas = JSON.parse(sessionStorage.getItem("ocupadas_compu") || "[]");
+  const ocupadas = ocupadas_compu || "[]";
   const btnPista= document.getElementById("pista_btn");
   btnPista.style.display="none"; //ocultar boton pista despues de usarlo
   

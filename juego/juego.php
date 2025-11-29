@@ -11,8 +11,6 @@ if (!$config) {
     die("No hay configuración cargada.");
 }
 
-// Tamaño del tablero
-$tablero = $config['tablero']; 
 
 // Barcos
 $ac_cant   = $config['acorazados']['cantidad'];
@@ -29,33 +27,6 @@ $sub_color = $config['submarinos']['color'];
 
 $porta_pos   = $config['portaviones']['posicion'];
 $porta_color = $config['portaviones']['color'];
-
-
-switch ($tablero) {
-     case '100':
-          $row=10;
-          $col=10;
-          $tab="chico";
-     break;
-     case '150':
-          $row=10;
-          $col=15;
-          $tab="mediano";
-     break;
-     case '200':
-          $row=20;
-          $col=10;
-          $tab="grande";
-     break; 
-     case '225':
-          $row=15;
-          $col=15;
-          $tab="enorme";
-     break;
-     default:
-          # code...
-          break;
-}
 
 $jsonFlota=json_encode([
      'acorazados' => [
@@ -78,10 +49,12 @@ $jsonFlota=json_encode([
           'color'    => $porta_color
      ]
 ]);
-$jsonTablero=json_encode([
-     'row' => $row,
-     'col' => $col
-]);
+
+//tablero
+require_once "../utils/gameConfig.php";
+
+list($row, $col, $tab) = getGameConfig();
+$jsonTablero = json_encode(["row" => $row, "col" => $col]);
 ?>
 
 <!DOCTYPE html>
@@ -89,7 +62,7 @@ $jsonTablero=json_encode([
 <head>
      <meta charset="UTF-8">
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>Document</title>
+     <title>Batalla naval</title>
      <link rel="stylesheet" href="./juego.css">
 
      <script> const flota = <?php echo $jsonFlota; ?>;</script>
@@ -111,47 +84,46 @@ $jsonTablero=json_encode([
                <div class="reloj" id="reloj">
                     <h2>Tiempo transcurrido:</h2>
                     <p id="tiempo">00:00</p>
-     </div>
-     <section class="botones_juego">     
-     <button id="finalizar_btn" onclick="abandonarPartida()">Abandonar partida</button>
-          <button id="pista_btn" onclick="darPista()">Pista</button>
-     </section>
+               </div>
+               <section class="botones_juego">     
+               <button id="finalizar_btn" onclick="abandonarPartida()">Abandonar partida</button>
+                    <button id="pista_btn" onclick="darPista()">Pista</button>
+               </section>
 
-            
-    
           </div>  
+
           <div class="info_juego">
-          <div class="separador">
-
-               <h3>Tu tablero</h3>
-     <h3>Tablero enemigo</h3>
-          </div>
-          <div class="contenedor_tableros">   
+               <div class="separador">
+                    <h3>Tu tablero</h3>
+                    <h3>Tablero enemigo</h3>
+               </div>
+               <div class="contenedor_tableros">   
                     <div class="tablero_<?php echo $tab; ?>" id="tablero">
-                    <!-- <h2>Tu tablero</h2> -->
-               <?php for ($i = 0; $i < $row; $i++): ?>
-                    <?php for ($j = 0; $j < $col; $j++): ?>
-                         <div class="cell" id="<?php echo 'cell-' . $i . '-' . $j; ?>"></div>
-                    <?php endfor; ?>
-               <?php endfor; ?>
-          </div>
-          <div class="tablero_<?php echo $tab; ?>" id="tablero"">
-             
-          <?php for ($i = 0; $i < $row; $i++): ?>
-                    <?php for ($j = 0; $j < $col; $j++): ?>
-                         <div class="cell_enemigo"  id="<?php echo 'cell-en-' . $i . '-' . $j; ?>"></div>
-                    <?php endfor; ?>
-               <?php endfor; ?>
-          </div>
-     </div>
-     <div id="indicaciones" class="indicaciones">
+                         <?php for ($i = 0; $i < $row; $i++): ?>
+                              <?php for ($j = 0; $j < $col; $j++): ?>
+                                   <div class="cell" id="<?php echo 'cell-' . $i . '-' . $j; ?>">
 
-          <p id="mensaje_resultado"> Info:  <span id="resultado"></span></p>
-     </div>
-      <section id="estadisticas" class="estadisticas">
-          <p id="mensaje_perdidos"> Barcos perdidos : <span id="perdidos"> 0</span></p>
+                                   </div>
+                              <?php endfor; ?>
+                         <?php endfor; ?>
+                    </div>
+               <div class="tablero_<?php echo $tab; ?>" id="tablero"">
+                    <?php for ($i = 0; $i < $row; $i++): ?>
+                         <?php for ($j = 0; $j < $col; $j++): ?>
+                              <div class="cell_enemigo"  id="<?php echo 'cell-en-' . $i . '-' . $j; ?>"></div>
+                         <?php endfor; ?>
+                    <?php endfor; ?>
+               </div>
+               </div>
+
+          <div id="indicaciones" class="indicaciones">
+               <p id="mensaje_resultado"> Info:  <span id="resultado"></span></p>
+          </div>
+
+          <section id="estadisticas" class="estadisticas">
+               <p id="mensaje_perdidos"> Barcos perdidos : <span id="perdidos"> 0</span></p>
                <p id="mensaje_hundidos"> Barcos hundidos : <span id="hundidos"> 0 </span></p>
-</section>
+          </section>
      </div>
 
      <div id="ranking">
@@ -171,6 +143,7 @@ $jsonTablero=json_encode([
 
      </main>
 <footer>
+     
 </footer>
 </body>
 </html>

@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Agregar listeners a TODOS los radios de color
+    // Agregar listeners a todos los radios de color
     grupos.forEach(name => {
         const radios = document.querySelectorAll(`input[name="${name}"]`);
         radios.forEach(radio => {
