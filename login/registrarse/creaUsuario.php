@@ -98,3 +98,6 @@ function creaUsuario($db, $nick, $email, $contra) {
 
     return $stmt2->execute();
 }
+
+$db->close();
+?>

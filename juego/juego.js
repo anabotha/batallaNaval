@@ -20,7 +20,6 @@ let aciertos = [
   { nombre: "acorazado", cantidad: 0 },
   { nombre: "portaviones", cantidad: 0 },
 ];
-let intervaloReloj = null;
 let pista=false;
 let pistaComputadora=false;
 const totalBarcos=calcularTotalBarcos();
@@ -29,13 +28,13 @@ const totalBarcos=calcularTotalBarcos();
 
 // event listener
 document.addEventListener("DOMContentLoaded", () => {
-
-  const inicio = Date.now();
   const cells_en = document.querySelectorAll(".cell_enemigo");
   const ocupadas = JSON.parse(sessionStorage.getItem("ocupadas") || "[]");
-  sessionStorage.setItem("inicioPartida", inicio);
+  const inicio = Date.now();
   colorearCeldasOcupadas(ocupadas);
   ranking();
+  mostrarTotalBarcos();
+  sessionStorage.setItem("inicioPartida", inicio);
   cells_en.forEach((cell) => {
     cell.addEventListener("click", posicionElegida);
   });
@@ -200,9 +199,9 @@ const evaluaJugada = (e) => {
       barco: resultado.barco,
       id: resultado.id,
     });
-
+console.log(resultado)
     cell.innerText = "X";
-    cell.style.backgroundColor = "red";
+    cell.style.backgroundColor = resultado.color;
     resultadoDiv.innerText = ` ¡Impactaste el ${resultado.barco} de la computadora!`;
           esTurnoJugador = true;
 
@@ -308,10 +307,6 @@ function abandonarPartida() {
   irLobby();
 }
 
-//tiempo
-
-
-
 
 function calcularTiempo(){
   const inicio = Number(sessionStorage.getItem("inicioPartida"));
@@ -402,7 +397,7 @@ function ranking(){
 
 function mostrarRanking(data){
 let p=document.getElementById("ranking_list");
-if(data.length === 0) {
+if(data.length === 0 || data==false) {
   p.innerText = "No hay partidas jugadas aún.";
 }else{
   data.forEach((usuario, index) => {
@@ -414,7 +409,11 @@ if(data.length === 0) {
   });
 }
 }
-
+//info partida
+function mostrarTotalBarcos(){
+  const totalBarcosSpan = document.getElementById("total_barcos");
+  totalBarcosSpan.innerText = totalBarcos;
+}
 //dirigir
 function irLobby(){
   window.location.href = "../lobby/lobby.php";

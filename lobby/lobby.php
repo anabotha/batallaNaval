@@ -52,6 +52,7 @@ if ($nick) {
     <form id="formUltimaPartida" method="post" action="./formConfigurarPartida.php">
         <input type="hidden" name="nick" value="<?= $nick ?>">
         <button type="submit">Configurar partida</button>
+        <button type="button" style="background-color: red;" onclick="location.href='../utils/logout.php'">Cerrar sesión</button>
     </form>
     </main>
         <footer>

@@ -1,6 +1,4 @@
-/* ============================= */
-/*     LAYOUT GENERAL            */
-/* ============================= */
+
 
 body {
     display: flex;
@@ -143,6 +141,20 @@ header h1 {
     background: #27b064;
 }
 
+
+button {
+    border: none;
+    padding: 10px 18px;
+    margin: 5px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: background 0.2s ease, transform 0.1s ease;
+    background-color: #2ecc71;
+    color: #ffffff;
+
+}
 
 @media (max-width: 850px) {
 

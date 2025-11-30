@@ -172,6 +172,10 @@ button:hover {
 .cell, .cell_enemigo {
     border: 1px solid #444;
     transition: 0.1s ease;
+    text-align: center;
+    font-size: 18px;
+    color : rgb(255, 255, 255);
+    font-weight: bold;
 }
 
 .cell_enemigo:hover {

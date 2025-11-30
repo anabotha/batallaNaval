@@ -1,12 +1,18 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
-
-$usuario = $_GET['usuario'] ?? "";
+session_start();
+if (!isset($_SESSION["user"])) {
+    header("Location: login.php");
+    exit;
+}
+$usuario = $_SESSION['user'] ?? "";
 
 if ($usuario === "") {
     echo json_encode(["error" => true, "mensaje" => "Falta usuario"]);
+    header("Location: login.php");
     exit;
 }
+   
 
 $respuesta = obtenerTop3PartidasGanadas($usuario);
 

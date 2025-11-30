@@ -1,22 +1,12 @@
 <?php
 session_start();
-if (!isset($_SESSION["user"])) {
+if (!isset($_SESSION["user"]) || $_SESSION["user"] === "") {
     header("Location: login.php");
     exit;
 }
 
-//barcos
-require_once "../utils/dataBarcos.php";  
 
-try {
-    $flota = getDataBarcos();
-//     $jsonFlota = json_encode($flota);
-} catch (Exception $e) {
-    die($e->getMessage());
-}
-
-
-//tablero
+// //tablero
 require_once "../utils/tablero.php";
 
 list($row, $col, $tab) = getGameConfig();
@@ -31,7 +21,6 @@ $jsonTablero = json_encode(["row" => $row, "col" => $col]);
      <title>Batalla naval</title>
      <link rel="stylesheet" href="./juego.css">
 
-     <!-- <script> const flota = <?php echo $jsonFlota; ?>;</script> -->
      <script>const tablero = <?php echo $jsonTablero; ?>;</script>
      <script src="./juego.js" defer></script>
      <script src="../utils/reloj.js" defer></script>
@@ -89,6 +78,7 @@ $jsonTablero = json_encode(["row" => $row, "col" => $col]);
 
           <section id="estadisticas" class="estadisticas">
                <p id="mensaje_perdidos"> Barcos perdidos : <span id="perdidos"> 0</span></p>
+               <p id="barcos"> Barcos totales : <span id="total_barcos"></span></p>
                <p id="mensaje_hundidos"> Barcos hundidos : <span id="hundidos"> 0 </span></p>
           </section>
      </div>

@@ -62,11 +62,14 @@ button {
 
 }
 
-
-
 button:hover {
     transform: translateY(-1px);
     filter: brightness(0.95);
+}
+
+form {
+    text-align: center;
+    flex-direction: column;
 }
 
 /* Responsive: en pantallas chicas, que no quede pegado a los bordes */

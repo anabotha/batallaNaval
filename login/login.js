@@ -30,16 +30,9 @@ function buscaNombre(usuario, contraseña) {
 
 function finLogueo(){
           //pase a otra vista
-          const btnLobby = document.createElement("button");
-          btnLobby.textContent = " IR A LOBBY ";
-          btnLobby.id = "btnLobby";
-          btnLobby.className="btnLobby";
-          const body = document.getElementById("body");
-          body.appendChild(btnLobby);
-          btnLobby.addEventListener("click",irLobby);//direcciona
           setTimeout(() => {
                irLobby();
-          }, 1000); 
+          }, 500); 
      
 }
 

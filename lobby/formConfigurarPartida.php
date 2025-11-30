@@ -51,7 +51,7 @@ if (!isset($_SESSION["user"])) {
       <input type="radio" name="color_submarinos" id="amarillo" value="yellow" required > amarillo </input>
  <input type="radio" name="color_submarinos" id="rojo" value="red" checked> rojo </input>
  <input type="radio" name="color_submarinos" id="verde" value="green"> verde </input>
- <input type="radio" name="color_submarinos" id="blanco" value="grey"> blanco </input>
+ <input type="radio" name="color_submarinos" id="gris" value="grey"> gris </input>
   <input type="radio" name="color_submarinos" id="azul" value="blue"> azul </input>   
  <input type="radio" name="color_submarinos" id="negro" value="black"> negro </input>   
 </div>
@@ -77,7 +77,7 @@ if (!isset($_SESSION["user"])) {
       <input type="radio" name="color_destructores" id="amarillo" value="yellow" required > amarillo </input>
  <input type="radio" name="color_destructores" id="rojo" value="red"> rojo </input>
  <input type="radio" name="color_destructores" id="verde" value="green"> verde </input>
- <input type="radio" name="color_destructores" id="blanco" value="grey" checked> blanco </input>
+ <input type="radio" name="color_destructores" id="gris" value="grey" checked> gris </input>
   <input type="radio" name="color_destructores" id="azul" value="blue"> azul </input>   
  <input type="radio" name="color_destructores" id="negro" value="black"> negro </input>   
 </div>
@@ -102,7 +102,7 @@ if (!isset($_SESSION["user"])) {
       <input type="radio" name="color_acorazados" id="amarillo" value="yellow" required checked> amarillo </input>
  <input type="radio" name="color_acorazados" id="rojo" value="red"> rojo </input>
  <input type="radio" name="color_acorazados" id="verde" value="green"> verde </input>
- <input type="radio" name="color_acorazados" id="blanco" value="grey"> blanco </input>
+ <input type="radio" name="color_acorazados" id="gris" value="grey"> gris </input>
  <input type="radio" name="color_acorazados" id="azul" value="blue"> azul </input>   
  <input type="radio" name="color_acorazados" id="negro" value="black"> negro </input>   
  
@@ -123,7 +123,7 @@ if (!isset($_SESSION["user"])) {
      <label for="color">Color del portaviones</label>
       <input type="radio" name="color_portaviones" id="amarillo" value="yellow" required > amarillo </input>
   <input type="radio" name="color_portaviones" id="verde" value="green" checked> verde </input>
- <input type="radio" name="color_portaviones" id="blanco" value="grey"> blanco </input>
+ <input type="radio" name="color_portaviones" id="gris" value="grey"> gris </input>
  <input type="radio" name="color_portaviones" id="azul" value="blue"> azul </input>   
  <input type="radio" name="color_portaviones" id="negro" value="black"> negro </input>   
 

@@ -1,3 +1,5 @@
+let intervaloReloj = null;
+
 document.addEventListener("DOMContentLoaded", () => {
 
      reloj();

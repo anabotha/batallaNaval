@@ -45,7 +45,7 @@ function gestionarRespuestas(usuario) {
                p.innerText = "";
                setTimeout(() => {
                     window.location.href = "../loginView.php";
-               }, 2000); 
+               }, 500); 
                break;
 
           case (usuario.nombreExiste && usuario.nuevo === false):

@@ -31,12 +31,8 @@ $jsonFlota = json_encode($flota);
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <title>Batalla Naval</title>
      <link rel="stylesheet" href="./posiciones.css">
-     <script>
-    const flota = <?php echo $jsonFlota; ?>;
-</script>
-<script>
-    const tablero = <?php echo $jsonTablero; ?>;
-</script>
+     <script>const flota = <?php echo $jsonFlota; ?>;</script>
+     <script>const tablero = <?php echo $jsonTablero; ?>;</script>
      <script src="./posiciones.js" defer></script>
      <script src="./posiciones_cpu.js" defer></script>
 
@@ -75,6 +71,8 @@ $jsonFlota = json_encode($flota);
           <h4>Acorazados: 3 celdas</h4>
           <h4>Portaviones: 4 celdas</h4>
           <button id="confirmarPosiciones" onClick="confirmarPosiciones()">Confirmar Posiciones</button>
+          <button type="button" style="background-color: red;" onclick="location.href='../utils/logout.php'">Cerrar sesión</button>
+
      </div>
      </div>
 

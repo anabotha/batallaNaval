@@ -1,7 +1,5 @@
 <?php
-// utils/gameConfig.php
 
-//     session_start();
 function getGameConfig() {
 
     if (!isset($_SESSION['config_juego'])) {
